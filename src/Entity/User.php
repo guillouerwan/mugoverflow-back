@@ -54,6 +54,12 @@ class User
      */
     private $products;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $promo;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -159,6 +165,18 @@ class User
         if ($this->products->removeElement($product)) {
             $product->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(?Promo $promo): self
+    {
+        $this->promo = $promo;
 
         return $this;
     }
