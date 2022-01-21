@@ -65,7 +65,7 @@ class AppFixtures extends Fixture
         // superadmin
         $superAdmin = new User();
         $superAdmin->setEmail('superadmin@superadmin.com');
-        $superAdmin->setRole(['ROLE_SUPERADMIN']);
+        $superAdmin->setRoles(['ROLE_SUPERADMIN']);
         $superAdmin->setPassword('$2y$13$/XcKyU1CpuiamaCJkTiz7OddqrPuelpyrRK.WsGTkHh9kFIn0hu8y');
         $superAdmin->setFirstname('PrenomSuperAdmin');
         $superAdmin->setLastname('PrenomSuperAdmin');
@@ -75,7 +75,7 @@ class AppFixtures extends Fixture
         // admin
         $admin = new User();
         $admin->setEmail('admin@admin.com');
-        $admin->setRole(['ROLE_ADMIN']);
+        $admin->setRoles(['ROLE_ADMIN']);
         $admin->setPassword('$2y$13$BxiBaD6.LMpM8abdO/40few.yL/WKVpT2i7XcgL2vA6eSl1CKiopS');
         $admin->setFirstname('PrenomAdmin');
         $admin->setLastname('PrenomAdmin');
@@ -85,7 +85,7 @@ class AppFixtures extends Fixture
         // user
         $user = new User();
         $user->setEmail('user@user.com');
-        $user->setRole(['ROLE_USER']);
+        $user->setRoles(['ROLE_USER']);
         $user->setPassword('$2y$13$8ScmTQEkvTam.GE3.X4ol..Ayj6YkJ6Z.iQKsKaiD0aK6Y5ZFLt6O');
         $user->setFirstname('PrenomUser');
         $user->setLastname('NomUser');
