@@ -112,6 +112,11 @@ class AppFixtures extends Fixture
             $manager->persist($promo);
         }
 
+        // We add the users to a promo
+        for ($i=0; $i < count($userList); $i++) { 
+            $promosList[mt_rand(0,3)]->addUser($userList[mt_rand(0,2)]);
+        }
+
         // Catégory
 
         // Category data array
