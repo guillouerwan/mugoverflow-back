@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,26 +24,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"user"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"user"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"user"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"user"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user"})
      */
     private $status = [];
 
@@ -59,6 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user"})
      */
     private $promo;
 

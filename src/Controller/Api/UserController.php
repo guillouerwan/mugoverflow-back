@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserController extends AbstractController
 {
@@ -16,20 +17,19 @@ class UserController extends AbstractController
      * 
      * @Route("/api/profil", name="api_user_profil", methods={"GET"})
      */
-    public function getProfil(TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager): Response
+    public function getProfil(Security $security): Response
     {
-
-        $decodedJwtToken = $jwtManager->decode($tokenStorageInterface->getToken());
+        $user = $security->getUser();
 
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
-            $decodedJwtToken,
+            $user,
             // Le status code
             200,
             // Les en-têtes de réponse à ajouter (aucune)
             [],
             // Les groupes à utiliser par le Serializer
-            ['groups' => 'get_collection']
+            ['groups' => 'user']
         );
     }
 }
