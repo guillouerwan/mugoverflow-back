@@ -3,7 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Repository\ProductRepository;
-use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +21,7 @@ class ProductController extends AbstractController
     {
         $productslist = $ProductRepository->findAll();
 
+      
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
             $productslist,
@@ -32,7 +32,10 @@ class ProductController extends AbstractController
             // Les groupes à utiliser par le Serializer
             ['groups' => 'get_products']
         ); 
+
+       
     }        
+
 
     /**
      * Get one item

@@ -20,27 +20,23 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get_products", "get_product"})
-
+     
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"get_products", "get_product"})
-     */
+         */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get_products", "get_product"})
-     */
+        */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="category")
-     * @Groups({"get_products", "get_product"})
-     */
+         */
     private $products;
 
     public function __construct()
