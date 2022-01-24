@@ -2,6 +2,8 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\User;
+use App\Form\RegisterType;
 use App\Form\EditProfilType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +13,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -44,10 +47,10 @@ class UserController extends AbstractController
     {  
         $user = $this->getUser();
 
-        $date = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
         $form = $this->createForm(EditProfilType::class, $user);
-        $form->submit($date);
+        $form->submit($data);
            
         $em = $doctrine->getManager();
         $em->flush();
@@ -65,39 +68,25 @@ class UserController extends AbstractController
      * 
      * @Route("/api/register", name="api_user_register", methods={"POST"})
      */
-    public function register(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface,SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
     {
 
-        $jsonContent = $request->getContent();
-
-        try {
-            $user = $serializer->deserialize($jsonContent, User::class, 'json');
-        } catch (NotEncodableValueException $e) {
-            // Si le JSON fourni est "malformé" ou manquant, on prévient le client
-            return $this->json(
-                ['error' => 'JSON invalide'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
+        $user = $serializer->deserialize($request->getContent(), User::class, 'json');
 
         $errors = $validator->validate($user);
 
-        // Y'a-t-il des erreurs ?
         if (count($errors) > 0) {
-            $errorsClean = [];
-
-            /** @var ConstraintViolation $error */
-            foreach ($errors as $error) {
-                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
-            };
-
-            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json($errors, 500);
         }
 
+        $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $user->getPassword());
+        // On écrase le mot de passe en clair par le mot de passe haché
+        $user->setPassword($hashedPassword);
+
         // On sauvegarde l'entité
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $em = $doctrine->getManager();
+        $em->persist($user);
+        $em->flush();
 
         return $this->json(
             "Votre compte a bien été enregistré !", 
