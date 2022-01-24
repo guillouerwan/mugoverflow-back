@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class ProductController extends AbstractController
+class CategoryController extends AbstractController
 
 {
     // 
