@@ -5,7 +5,7 @@ api_login_check:
     path: /api/login_check
 
 app_logout:
-    path: /logout
+    path: /api/logout
     methods: GET
 
 gesdinet_jwt_refresh_token:

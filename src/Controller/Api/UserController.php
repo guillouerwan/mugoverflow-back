@@ -7,11 +7,13 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class UserController extends AbstractController
 {
-
     /**
      * Get the profil of the user authenticated 
      * 
@@ -55,6 +57,51 @@ class UserController extends AbstractController
             200,
             [],
             ['groups' => 'user']
+        );
+    }
+
+    /**
+     * register a new user
+     * 
+     * @Route("/api/register", name="api_user_register", methods={"POST"})
+     */
+    public function register(Request $request, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
+    {
+
+        $jsonContent = $request->getContent();
+
+        try {
+            $user = $serializer->deserialize($jsonContent, User::class, 'json');
+        } catch (NotEncodableValueException $e) {
+            // Si le JSON fourni est "malformé" ou manquant, on prévient le client
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $errors = $validator->validate($user);
+
+        // Y'a-t-il des erreurs ?
+        if (count($errors) > 0) {
+            $errorsClean = [];
+
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // On sauvegarde l'entité
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json(
+            "Votre compte a bien été enregistré !", 
+            Response::HTTP_CREATED
         );
     }
 }
