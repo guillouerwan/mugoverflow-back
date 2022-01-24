@@ -2,10 +2,11 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Promo;
 use App\Entity\User;
+use App\Entity\Promo;
 use App\Form\RegisterType;
 use App\Form\EditProfilType;
+use App\Form\PasswordChangeType;
 use App\Repository\PromoRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\JsonLoginFactory;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\JsonLoginFactory;
 
 class UserController extends AbstractController
 {
@@ -71,7 +72,7 @@ class UserController extends AbstractController
      * 
      * @Route("/api/register", name="api_user_register", methods={"POST"})
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface,SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, PromoRepository $promoRepository): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, PromoRepository $promoRepository): Response
     {
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
 
@@ -102,6 +103,44 @@ class UserController extends AbstractController
         return $this->json(
             "Votre compte a bien été enregistré !", 
             Response::HTTP_CREATED
+        );
+    }
+
+    /**
+     * New password
+     * @Route("/api/profil/password", name="api_user_password_update", methods={"PUT"})
+     */
+    public function passwordUpdate(Request $request, ManagerRegistry $doctrine)
+    {
+        $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), true);
+        
+        $currentPassword = $data["currentPassword"];
+        dd($currentPassword);
+        $newPassword = $data["newPassword"];
+        $checkPassword = $data["checkPassword"];
+
+        if($user->getPassword() !== $currentPassword){
+            return $this->json(
+                "Mauvais mot de passe",
+                200
+            );
+        }
+
+        dd($data);
+
+        $form = $this->createForm(PasswordChangeType::class, $user);
+        $form->submit($data);
+           
+        $em = $doctrine->getManager();
+        $em->flush();
+
+        return $this->json(
+            "Votre mot de passe à bien été modifié",
+            200,
+            [],
+            ['groups' => 'user']
         );
     }
 }
