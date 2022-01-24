@@ -17,14 +17,14 @@ class ProductController extends AbstractController
     /**
      * @Route("/api/products", name="api_products", methods={"GET"})
      */
-    public function getProducts(ProductRepository $ProductRepository): Response
+    public function getProducts(ProductRepository $productRepository): Response
     {
-        $productslist = $ProductRepository->findAll();
+        $productsList = $productRepository->findAll();
 
       
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
-            $productslist,
+            $productsList,
             // Le status code
             200,
             // Les en-têtes de réponse à ajouter (aucune)
