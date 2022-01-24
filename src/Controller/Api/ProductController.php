@@ -4,7 +4,6 @@ namespace App\Controller\Api;
 
 use App\Repository\ProductRepository;
 use App\Entity\Product;
-use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +20,7 @@ class ProductController extends AbstractController
     {
         $productsList = $productRepository->findAll();
 
-      
-        return $this->json(
+            return $this->json(
             // Les données à sérialiser (à convertir en JSON)
             $productsList,
             // Le status code

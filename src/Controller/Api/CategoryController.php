@@ -19,7 +19,6 @@ class ProductController extends AbstractController
     public function getCategories(CategoryRepository $categoryRepository): Response
     {
         $categoryList = $categoryRepository->findAll();
-
       
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
@@ -33,5 +32,19 @@ class ProductController extends AbstractController
         ); 
       
     }    
-    
+     
+    /**
+     * Get one item
+     * 
+     * @Route("/api/categories/{id<\d+>}", name="api_category", methods={"GET"})
+     */
+    public function getCategory(Category $category = null)
+    {
+        // 404 ?
+        if ($category === null) {
+            return $this->json(['error' => 'Catégorie non trouvé.'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($category, Response::HTTP_OK, [], ['groups' => 'get_category']);
+    }   
 }
