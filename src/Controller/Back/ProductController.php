@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Repository\ProductRepository;
 use App\Entity\Category;
+use App\Entity\Product;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
