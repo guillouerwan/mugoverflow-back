@@ -47,6 +47,6 @@ class ProductController extends AbstractController
             return $this->json(['error' => 'Catégorie non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($category, Response::HTTP_OK, [], ['groups' => 'get_product']);
+        return $this->json($category, Response::HTTP_OK, [], ['groups' => 'get_category']);
     }
 }

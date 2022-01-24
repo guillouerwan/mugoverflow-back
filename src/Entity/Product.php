@@ -29,14 +29,14 @@ class Product
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_products", "get_product", "get_category"})
 
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_products", "get_product", "get_category"})
      */
     private $mockupFront;
 
