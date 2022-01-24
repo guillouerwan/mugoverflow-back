@@ -23,6 +23,11 @@ class ProductController extends AbstractController
         return  $this->json($productslist);
     }
 
+
+    // 
+    /**
+     * @Route("/api/products/{id} ", name="api_product", methods={"GET"})
+     */
     public function getProduct(ProductRepository $ProductRepository): Response
     {
         $productlist = $ProductRepository->find();
