@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Repository\ProductRepository;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,19 +33,5 @@ class ProductController extends AbstractController
         ); 
       
     }    
-        
-    /**
-     * Get one item
-     * 
-     * @Route("/api/categories/{id<\d+>}", name="api_category", methods={"GET"})
-     */
-    public function getProduct(Category $category = null)
-    {
-        // 404 ?
-        if ($category === null) {
-            return $this->json(['error' => 'Catégorie non trouvé.'], Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($category, Response::HTTP_OK, [], ['groups' => 'get_category']);
-    }
+    
 }
