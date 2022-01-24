@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use App\Entity\Category;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -20,19 +21,31 @@ class ProductController extends AbstractController
     {
         $productslist = $ProductRepository->findAll();
 
-        return  $this->json($productslist);
-    }
+        return $this->json(
+            // Les données à sérialiser (à convertir en JSON)
+            $productslist,
+            // Le status code
+            200,
+            // Les en-têtes de réponse à ajouter (aucune)
+            [],
+            // Les groupes à utiliser par le Serializer
+            ['groups' => 'get_products']
+        ); 
+    }        
 
-
-    // 
     /**
-     * @Route("/api/products/{id} ", name="api_product", methods={"GET"})
+     * Get one item
+     * 
+     * @Route("/api/products/{id<\d+>}", name="api_product", methods={"GET"})
      */
-    public function getProduct(ProductRepository $ProductRepository): Response
+    public function getProduct(Product $product = null)
     {
-        $productlist = $ProductRepository->find();
-        
-        return  $this->json($productlist);
+        // 404 ?
+        if ($product === null) {
+            return $this->json(['error' => 'Produit non trouvé.'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
 
 
