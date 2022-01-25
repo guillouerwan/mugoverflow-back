@@ -9,8 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-
-
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
@@ -31,11 +29,13 @@ class Category
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *  @Groups({"get_categories", "get_category"})
         */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="category")
+     * @Groups({"get_categories", "get_category"})
          */
     private $products;
 

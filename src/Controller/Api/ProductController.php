@@ -4,7 +4,6 @@ namespace App\Controller\Api;
 
 use App\Repository\ProductRepository;
 use App\Entity\Product;
-use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,17 +13,18 @@ class ProductController extends AbstractController
 
 {
     // 
-    /**
+    /**  Get all products
+     *
      * @Route("/api/products", name="api_products", methods={"GET"})
      */
-    public function getProducts(ProductRepository $ProductRepository): Response
+    public function getProducts(ProductRepository $productRepository): Response
     {
-        $productslist = $ProductRepository->findAll();
+        $productsList = $productRepository->findAll();
 
       
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
-            $productslist,
+            $productsList,
             // Le status code
             200,
             // Les en-têtes de réponse à ajouter (aucune)
@@ -38,7 +38,7 @@ class ProductController extends AbstractController
 
 
     /**
-     * Get one item
+     * Get one products with id
      * 
      * @Route("/api/products/{id<\d+>}", name="api_product", methods={"GET"})
      */
@@ -51,6 +51,5 @@ class ProductController extends AbstractController
 
         return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
-
-
+      
 }

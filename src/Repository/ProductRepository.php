@@ -19,6 +19,22 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findByCategoryId($id)
+    {
+        // I call doctrine to make my request 
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT * 
+            FROM App\Entity\Product 
+            WHERE category_id = :id'
+            
+        )->setParameter('id', $id);
+        return $query->getResult();
+        
+        
+    }
+ 
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
