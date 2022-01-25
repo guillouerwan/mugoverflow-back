@@ -28,24 +28,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=128, unique=true)
      * @Groups({"user"})
+     * @Assert\NotBlank
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64, )
      * @Groups({"user"})
+     * @Assert\NotBlank
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"user"})
+     * @Assert\NotBlank
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=128)
      * @Groups({"user"})
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -68,6 +72,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull
+     * @Assert\NotBlank
      * @Groups({"user"})
      */
     private $promo;

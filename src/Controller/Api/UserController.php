@@ -14,7 +14,10 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class UserController extends AbstractController
 {
@@ -44,7 +47,7 @@ class UserController extends AbstractController
      * 
      * @Route("/api/profil/update", name="api_user_profil_update", methods={"PUT"})
      */
-    public function updateProfil(Request $request, ManagerRegistry $doctrine): Response
+    public function updateProfil(Request $request, ManagerRegistry $doctrine, JWTTokenManagerInterface $JWTManager): Response
     {  
         $user = $this->getUser();
 
@@ -57,7 +60,9 @@ class UserController extends AbstractController
         $em->flush();
 
         return $this->json(
-            $this->getUser(),
+            [$this->getUser(),
+            ['token' => $JWTManager->create($user)]
+            ],
             200,
             [],
             ['groups' => 'user']
@@ -69,15 +74,23 @@ class UserController extends AbstractController
      * 
      * @Route("/api/register", name="api_user_register", methods={"POST"})
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, PromoRepository $promoRepository): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
     {
         // Retrieval of necessary data
-
-        $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+        try {
+            $user = $serializer->deserialize($request->getContent(), User::class, 'json', [
+                DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
+                ]);
+        } catch (NotEncodableValueException $e) {
+            return $this->json(
+                ['error' => 'JSON invalide'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
 
         $jsonContent = json_decode($request->getContent(), true);
 
-        $promo = $promoRepository->find($jsonContent["promo"]);
+        // $promo = $promoRepository->find($jsonContent["promo"]);
 
         $errors = $validator->validate($user);
 
@@ -95,18 +108,14 @@ class UserController extends AbstractController
         if($jsonContent['checkPassword'] !== $jsonContent['password']){
             return $this->json(["password" => ["Les mots de passe ne correspondent pas"]],  Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        if(!$promo){
-            return $this->json(["promo" => ["La promo saisie n'existe pas."]],  Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
+        
         // If validation OK :
 
         $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $user->getPassword());
 
         $user->setPassword($hashedPassword);
 
-        $promo->addUser($user);
+        // $promo->addUser($user);
 
         $em = $doctrine->getManager();
         $em->persist($user);
@@ -120,6 +129,7 @@ class UserController extends AbstractController
 
     /**
      * For update the password
+     * 
      * @Route("/api/profil/password", name="api_user_password_update", methods={"PUT"})
      */
     public function passwordUpdate(Request $request, ManagerRegistry $doctrine,  UserPasswordHasherInterface $userPasswordHasherInterface)
