@@ -5,7 +5,6 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Form\EditProfilType;
 use App\Form\UpdatePasswordType;
-use App\Repository\PromoRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,8 +89,6 @@ class UserController extends AbstractController
 
         $jsonContent = json_decode($request->getContent(), true);
 
-        // $promo = $promoRepository->find($jsonContent["promo"]);
-
         $errors = $validator->validate($user);
 
         // Check validations
@@ -114,8 +111,6 @@ class UserController extends AbstractController
         $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $user->getPassword());
 
         $user->setPassword($hashedPassword);
-
-        // $promo->addUser($user);
 
         $em = $doctrine->getManager();
         $em->persist($user);
