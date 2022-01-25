@@ -3,21 +3,18 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
-use App\Entity\Promo;
-use App\Form\RegisterType;
 use App\Form\EditProfilType;
-use App\Form\PasswordChangeType;
+use App\Form\UpdatePasswordType;
 use App\Repository\PromoRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\JsonLoginFactory;
 
 class UserController extends AbstractController
 {
@@ -74,21 +71,36 @@ class UserController extends AbstractController
      */
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator, PromoRepository $promoRepository): Response
     {
+        // Retrieval of necessary data
+
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
 
         $jsonContent = json_decode($request->getContent(), true);
 
         $promo = $promoRepository->find($jsonContent["promo"]);
 
-        if(!$promo){
-            return $this->json("La promo saisie n'existe pas.", 500);
-        }
-
         $errors = $validator->validate($user);
 
+        // Check validations
+
         if (count($errors) > 0) {
-            return $this->json($errors, 500);
+            $errorsClean = [];
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorsClean[$error->getPropertyPath()][] = $error->getMessage();
+            };
+            return $this->json($errorsClean, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        
+        if($jsonContent['checkPassword'] !== $jsonContent['password']){
+            return $this->json(["password" => ["Les mots de passe ne correspondent pas"]],  Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if(!$promo){
+            return $this->json(["promo" => ["La promo saisie n'existe pas."]],  Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // If validation OK :
 
         $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $user->getPassword());
 
@@ -107,32 +119,45 @@ class UserController extends AbstractController
     }
 
     /**
-     * New password
+     * For update the password
      * @Route("/api/profil/password", name="api_user_password_update", methods={"PUT"})
      */
-    public function passwordUpdate(Request $request, ManagerRegistry $doctrine)
+    public function passwordUpdate(Request $request, ManagerRegistry $doctrine,  UserPasswordHasherInterface $userPasswordHasherInterface)
     {
+        // Retrieval of necessary data
+
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);
         
-        $currentPassword = $data["currentPassword"];
-        dd($currentPassword);
+        $currentPassword = $userPasswordHasherInterface->isPasswordValid($user, $data["currentPassword"]);
+
         $newPassword = $data["newPassword"];
         $checkPassword = $data["checkPassword"];
 
-        if($user->getPassword() !== $currentPassword){
-            return $this->json(
-                "Mauvais mot de passe",
-                200
-            );
+        $errors = [];
+
+        // Check passwords
+
+        if(!$currentPassword){
+            $errors["currentPassword"] = ["Mot de passe actuel incorrect"];
         }
 
-        dd($data);
+        if($newPassword !== $checkPassword){
+            $errors["newPassword"] = ["Les mots de passe ne correspondent pas"];
+        }
 
-        $form = $this->createForm(PasswordChangeType::class, $user);
-        $form->submit($data);
-           
+        if(count($errors) > 0){
+            return $this->json($errors, Response::HTTP_BAD_REQUEST);
+        }
+
+        // If validation OK :
+
+        $hashedPassword = ["password" => $userPasswordHasherInterface->hashPassword($user, $data["newPassword"])];
+
+        $form = $this->createForm(UpdatePasswordType::class, $user);
+        $form->submit($hashedPassword);
+
         $em = $doctrine->getManager();
         $em->flush();
 
