@@ -77,9 +77,7 @@ class UserController extends AbstractController
     {
         // Retrieval of necessary data
         try {
-            $user = $serializer->deserialize($request->getContent(), User::class, 'json', [
-                DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
-                ]);
+            $user = $serializer->deserialize($request->getContent(), User::class, 'json');
         } catch (NotEncodableValueException $e) {
             return $this->json(
                 ['error' => 'JSON invalide'],
