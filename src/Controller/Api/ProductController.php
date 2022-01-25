@@ -13,14 +13,16 @@ class ProductController extends AbstractController
 
 {
     // 
-    /**
+    /**  Get all products
+     *
      * @Route("/api/products", name="api_products", methods={"GET"})
      */
     public function getProducts(ProductRepository $productRepository): Response
     {
         $productsList = $productRepository->findAll();
 
-            return $this->json(
+      
+        return $this->json(
             // Les données à sérialiser (à convertir en JSON)
             $productsList,
             // Le status code
@@ -36,7 +38,7 @@ class ProductController extends AbstractController
 
 
     /**
-     * Get one item
+     * Get one products with id
      * 
      * @Route("/api/products/{id<\d+>}", name="api_product", methods={"GET"})
      */
@@ -49,6 +51,5 @@ class ProductController extends AbstractController
 
         return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
-
-
+      
 }
