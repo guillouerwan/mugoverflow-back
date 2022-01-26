@@ -37,7 +37,6 @@ class AppFixtures extends Fixture
         $this->connection->executeQuery('TRUNCATE TABLE main_color');
         $this->connection->executeQuery('TRUNCATE TABLE product');
         $this->connection->executeQuery('TRUNCATE TABLE product_category');
-        $this->connection->executeQuery('TRUNCATE TABLE product_user');
         $this->connection->executeQuery('TRUNCATE TABLE promo');
         $this->connection->executeQuery('TRUNCATE TABLE secondary_color');
         $this->connection->executeQuery('TRUNCATE TABLE user');
@@ -148,12 +147,13 @@ class AppFixtures extends Fixture
 
         $manager->persist($secondaryColor);
 
+
+
         // Product
         for ($i=1; $i < 10; $i++) { 
             // Create new product
             $product = new Product();
             $product->setName($MugOverflowProvider->mugTitle(mt_rand(0, 9)));
-            $product->addUser($userList[mt_rand(0,2)]);
             $product->setMainColor($mainColor);
             $product->setSecondaryColor($secondaryColor);
             $product->setCreatedAt(new DateTime());
@@ -161,10 +161,10 @@ class AppFixtures extends Fixture
             // Set random paragraph
             $product->setDescription($faker->paragraph(2));
             // Set images
-            $product->setLogo('https://s3-eu-west-1.amazonaws.com/tpd/logos/595cae450000ff0005a600d6/0x0.png');
-            $product->setImage('https://picsum.photos/id/'.mt_rand(1, 100).'/300/300');
-            $product->setMockupBack('https://cdn.habitat.fr/thumbnails/product/1319/1319267/box/850/850/40/F4F4F4/mug-8cm-en-porcelaine-blanche_1319267.jpg');
-            $product->setMockupFront('https://ih1.redbubble.net/image.1791840745.7490/ur,mug_lifestyle,tall_portrait,750x1000.jpg');
+            $product->setLogo('logotest.png');
+            $product->setImage('imagetest'.mt_rand(1, 6).'.jpg');
+            $product->setMockupBack('mockupbacktest.jpg');
+            $product->setMockupFront('mockupfronttest.jpg');
             
             // We add random number category by product
             for ($g = 1; $g <= mt_rand(1, 3); $g++) {
