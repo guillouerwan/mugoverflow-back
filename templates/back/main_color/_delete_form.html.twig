@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('back_main_color_delete', {'id': main_color.id}) }}" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette couleur ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ main_color.id) }}">
+    <button class="btn btn-danger btn-sm">Supprimer</button>
+</form>
