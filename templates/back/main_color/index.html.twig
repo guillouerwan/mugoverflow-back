@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Couleurs principales{% endblock %}
+
+{% block body %}
+<h1>Couleurs principales</h1>
+
+<a class="btn btn-warning btn-sm my-2" href="{{ path('back_main_color_new') }}">Nouvelle couleur</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Code hexa</th>
+            <th>Nom de la couleur</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for main_color in main_colors %}
+        <tr>
+            <td>{{ main_color.id }}</td>
+            <td>{{ main_color.mainHexa }}</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    {{ main_color.mainColorName }}<span class="border ms-2"
+                        style="background-color: {{ main_color.mainHexa }}; width:20px; height:20px; display:inline-block;"></span>
+                </div>
+            </td>
+            <td>{% if main_color.status == 1 %}Disponible{% else %}Non disponible{% endif %}</td>
+            <td>
+                <div class="d-flex">
+                    <a class="btn btn-primary btn-sm me-2"
+                        href="{{ path('back_main_color_edit', {'id': main_color.id}) }}">Editer</a>
+                    {{ include('back/main_color/_delete_form.html.twig') }}
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
