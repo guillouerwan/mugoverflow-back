@@ -15,7 +15,8 @@ class MainColorType extends AbstractType
     {
         $builder
             ->add('mainHexa', TextType::class, [
-                'label' => 'Code hexadécimal (#code)'
+                'label' => 'Code hexadécimal (#code)',
+                'help' => 'Exemple : #021E00'
             ])
             ->add('mainColorName', TextType::class, [
                 'label' => 'Nom de la couleur',
@@ -34,6 +35,9 @@ class MainColorType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MainColor::class,
+            'attr' => [
+                'novalidate' => 'novalidate',
+            ]
         ]);
     }
 }

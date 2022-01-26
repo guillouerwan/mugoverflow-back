@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -24,13 +25,14 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"get_products", "get_product"})
-
+     * @Assert\NotBlank
      */
     private $description;
 
@@ -82,7 +84,7 @@ class Product
     private $secondaryColor;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
      */
     private $user;
 
@@ -93,8 +95,8 @@ class Product
 
     public function __construct()
     {
-        $this->user = new ArrayCollection();
         $this->category = new ArrayCollection();
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int
@@ -237,23 +239,14 @@ class Product
     /**
      * @return Collection|User[]
      */
-    public function getUser(): Collection
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function addUser(User $user): self
+    public function setUser(?User $user): self
     {
-        if (!$this->user->contains($user)) {
-            $this->user[] = $user;
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        $this->user->removeElement($user);
+        $this->user = $user;
 
         return $this;
     }
