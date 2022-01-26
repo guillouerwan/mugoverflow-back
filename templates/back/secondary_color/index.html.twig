@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Couleurs secondaires des mugs{% endblock %}
+
+{% block body %}
+    <h1>Couleurs secondaires des mugs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Hexa de la couleur secondaire</th>
+                <th>Nom de la couleur secondaire</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for secondary_color in secondary_colors %}
+            <tr>
+                <td>{{ secondary_color.id }}</td>
+                <td>{{ secondary_color.secondaryHexa }}</td>
+                <td>{{ secondary_color.secondaryColorName }}</td>
+                <td>{{ secondary_color.status }}</td>
+                <td>
+                     <a class="btn btn-primary btn-sm me-2"  href="{{ path('back_secondary_color_edit', {'id': secondary_color.id}) }}">editer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('back_secondary_color_new') }}">Créer une nouvelle couleur</a>
+{% endblock %}
