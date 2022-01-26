@@ -5,6 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +53,8 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement du mockup front');
+                    return $this->redirectToRoute('back_product_new', [],Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
                 $product->setMockupFront($newFilename);
@@ -67,10 +69,11 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement du mockup back');
+                    return $this->redirectToRoute('back_product_new', [],Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
-                $product->setMockupFront($newFilename);
+                $product->setMockupBack($newFilename);
             }
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -82,10 +85,11 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'image');
+                    return $this->redirectToRoute('back_product_new', [],Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
-                $product->setMockupFront($newFilename);
+                $product->setImage($newFilename);
             }
             if ($logoFile) {
                 $originalFilename = pathinfo($logoFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -97,10 +101,11 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement du logo');
+                    return $this->redirectToRoute('back_product_new', [],Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
-                $product->setMockupFront($newFilename);
+                $product->setLogo($newFilename);
             }
 
             $entityManager->persist($product);
@@ -138,7 +143,7 @@ class ProductController extends AbstractController
             $mockupBackFile = $form->get('mockupBack')->getData();
             $imageFile = $form->get('image')->getData();
             $logoFile = $form->get('logo')->getData();
-
+            
             if ($mockupFrontFile) {
                 $originalFilename = pathinfo($mockupFrontFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
@@ -149,7 +154,12 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement du mockup front');
+                    return $this->redirectToRoute('back_product_index', [
+                        'product' => $product,
+                        'form' => $form,
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
                 $product->setMockupFront($newFilename);
@@ -164,10 +174,15 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement du mockup back');
+                    return $this->redirectToRoute('back_product_index', [
+                        'product' => $product,
+                        'form' => $form,
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
-                $product->setMockupFront($newFilename);
+                $product->setMockupBack($newFilename);
             }
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -179,10 +194,15 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'image');
+                    return $this->redirectToRoute('back_product_index', [
+                        'product' => $product,
+                        'form' => $form,
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
-
-                $product->setMockupFront($newFilename);
+                
+                $product->setImage($newFilename);
             }
             if ($logoFile) {
                 $originalFilename = pathinfo($logoFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -194,12 +214,19 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->addFlash('warning', 'Erreur durant le chargement du logo');
+                    return $this->redirectToRoute('back_product_index', [
+                        'product' => $product,
+                        'form' => $form,
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
-                $product->setMockupFront($newFilename);
+                $product->setLogo($newFilename);
             }
-            
+
+            $product->setUpdatedAt(new DateTime());
+
             $entityManager->flush();
 
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
