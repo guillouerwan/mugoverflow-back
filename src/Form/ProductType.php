@@ -103,13 +103,15 @@ class ProductType extends AbstractType
                 'choice_label' => 'firstname',
                 'multiple' => false,
                 'placeholder' => 'Associer ce produit à un utilisateur ?',
-                'expanded' => false
+                'expanded' => false,
+                'help' => 'Laissez par défaut si pas d\'utilisateur associé'
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
+                'help' => 'Sélectionnez au minimum une catégorie'
             ])
         ;
     }
