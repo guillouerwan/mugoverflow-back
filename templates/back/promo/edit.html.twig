@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editer une promo{% endblock %}
+
+{% block body %}
+<h1>Editer une promo</h1>
+
+{{ include('back/promo/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+<div class="d-flex justify-content-between mt-2">
+    {{ include('back/promo/_delete_form.html.twig') }}
+    <a href="{{ path('back_promo_index') }}">Retour à la liste</a>
+</div>
+
+{% endblock %}

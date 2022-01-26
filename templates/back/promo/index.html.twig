@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des promos{% endblock %}
+
+{% block body %}
+<h1>Liste des promos</h1>
+
+<a class="btn btn-warning btn-sm my-2" href="{{ path('back_promo_new') }}">Nouvelle promo</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom de la promo</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for promo in promos %}
+        <tr>
+            <td>{{ promo.id }}</td>
+            <td>{{ promo.name }}</td>
+            <td>
+                <div class="d-flex">
+                    <a class="btn btn-primary btn-sm me-2" href="{{ path('back_promo_edit', {'id': promo.id}) }}">Editer</a>
+
+                    {{ include('back/promo/_delete_form.html.twig') }}
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
