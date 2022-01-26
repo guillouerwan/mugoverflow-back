@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle promo{% endblock %}
+
+{% block body %}
+    <h1>Création d'une nouvelle promo</h1>
+
+    {{ include('back/promo/_form.html.twig') }}
+    <div class="d-flex justify-content-end mt-2">
+    <a href="{{ path('back_promo_index') }}">Retour à la liste</a>
+    </div>
+{% endblock %}
