@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @Route("/back/product")
@@ -247,6 +249,37 @@ class ProductController extends AbstractController
             $entityManager->remove($product);
             $entityManager->flush();
         }
+
+        return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/{id}/{image}", name="back_product_picture", methods={"POST"})
+     */
+    public function deletePicture($image, Product $product, EntityManagerInterface $entityManager, Filesystem $filesystem)
+    {
+        if ($image === "mockupFront"){
+            $path = $this->getParameter('images_directory').'/'.$product->getMockupFront();
+            $filesystem->remove($path);
+            $product->setMockupFront(null);
+        }
+        if ($image === "mockupBack"){
+            $path = $this->getParameter('images_directory').'/'.$product->getMockupBack();
+            $filesystem->remove($path);
+            $product->setMockupBack(null);
+        }
+        if ($image === "image"){
+            $path = $this->getParameter('images_directory').'/'.$product->getImage();
+            $filesystem->remove($path);
+            $product->setImage(null);
+        }
+        if ($image === "logo"){
+            $path = $this->getParameter('images_directory').'/'.$product->getLogo();
+            $filesystem->remove($path);
+            $product->setLogo(null);
+        }
+
+        $entityManager->flush();
 
         return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
     }
