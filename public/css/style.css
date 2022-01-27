@@ -1,0 +1,20 @@
+body {
+    background-color: #32373c;
+    color: #fffdd8;
+}
+
+a {
+    color: #fffdd8!important;
+}
+
+table {
+    color: #fffdd8!important;
+}
+
+.bg-light, .dropdown-menu {
+    background-color: #1e2124!important;
+}
+
+.btn-warning {
+    color: #1e2124!important;
+}
