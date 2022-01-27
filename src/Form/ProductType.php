@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\MainColor;
 use App\Entity\Product;
+use App\Entity\SecondaryColor;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -97,7 +98,12 @@ class ProductType extends AbstractType
                 'multiple' => false,
                 'expanded' => false
             ])
-            // ->add('secondaryColor')
+            ->add('secondaryColor', EntityType::class, [
+                'class' => SecondaryColor::class,
+                'choice_label' => 'secondary_color_name',
+                'multiple' => false,
+                'expanded' => false
+            ])
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'firstname',

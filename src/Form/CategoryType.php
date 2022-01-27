@@ -15,7 +15,6 @@ class CategoryType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('description', TextType::class)
-            //->add('products')
         ;
     }
 
