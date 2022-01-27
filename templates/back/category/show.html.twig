@@ -24,7 +24,7 @@
 
     <a href="{{ path('back_category_index') }}">Retour à la liste</a>
 
-    <a href="{{ path('back_category_edit', {'id': category.id}) }}">édition</a>
+      <a class="btn btn-primary btn-sm" href="{{ path('back_category_edit', {'id': category.id}) }}">édition</a>
 
     {{ include('back/category/_delete_form.html.twig') }}
 {% endblock %}

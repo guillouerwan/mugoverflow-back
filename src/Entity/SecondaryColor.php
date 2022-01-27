@@ -6,6 +6,7 @@ use App\Repository\SecondaryColorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SecondaryColorRepository::class)
@@ -21,16 +22,19 @@ class SecondaryColor
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank
      */
     private $secondaryHexa;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank
      */
     private $secondaryColorName;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
      */
     private $status;
 

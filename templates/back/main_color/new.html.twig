@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Création d'un nouvelle couleur{% endblock %}
+{% block title %}Nouvelle nouvelle couleur{% endblock %}
 
 {% block body %}
-    <h1>Création d'un nouvelle couleur</h1>
+<h1>Nouvelle nouvelle couleur</h1>
 
-    {{ include('back/main_color/_form.html.twig') }}
-    <div class="d-flex justify-content-end mt-2">
+{{ include('back/main_color/_form.html.twig') }}
+<div class="d-flex justify-content-end mt-2">
     <a href="{{ path('back_main_color_index') }}">Retour à la liste</a>
-    </div>
+</div>
 {% endblock %}
