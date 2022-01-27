@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edition de la promo {{ promo.name}}{% endblock %}
+{% block title %}Edition de la promo {{promo.name}}{% endblock %}
 
 {% block body %}
-<h1>Edition de la promo {{ promo.name}}</h1>
+<h1>Edition de la promo {{promo.name}}</h1>
 
 {{ include('back/promo/_form.html.twig', {'button_label': 'Mise à jour'}) }}
 <div class="d-flex justify-content-between mt-2">
