@@ -64,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="user")
      */
     private $products;
 
@@ -218,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->addUser($this);
+            $product->setUser($this);
         }
 
         return $this;
@@ -226,8 +226,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeProduct(Product $product): self
     {
+
         if ($this->products->removeElement($product)) {
-            $product->removeUser($this);
+            // set the owning side to null (unless already changed)
+            if ($product->getUser() === $this) {
+                $product->setUser(null);
+            }
         }
 
         return $this;

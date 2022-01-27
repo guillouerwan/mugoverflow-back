@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edition du produit : {{ product.name }}{% endblock %}
+
+{% block body %}
+<h1>Edition du produit : {{ product.name }}</h1>
+
+{{ include('back/product/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+{% if product.id != null %}
+<div class="d-flex flex-column my-2">
+    {% if product.mockupFront != null %}
+    <div class="my-1 d-flex">
+        <div>
+            <img src="{{ asset('uploads/images/' ~ product.mockupFront) }}" alt="" width="40px">
+        </div>
+        <div>
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupFront'}) }}" method="post">
+                <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></span></button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    {% if product.mockupBack != null %}
+    <div class="my-1 d-flex">
+        <div>
+            <img src="{{ asset('uploads/images/' ~ product.mockupBack) }}" alt="" width="40px">
+        </div>
+        <div>
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupBack'}) }}" method="post">
+                <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></span></button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    {% if product.image != null %}
+    <div class="my-1 d-flex">
+        <div>
+            <img src="{{ asset('uploads/images/' ~ product.image) }}" alt="" width="40px">
+        </div>
+        <div>
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'image'}) }}" method="post">
+                <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></span></button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    {% if product.logo != null %}
+    <div class="my-1 d-flex">
+        <div>
+            <img src="{{ asset('uploads/images/' ~ product.logo) }}" alt="" width="40px">
+        </div>
+        <div>
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'logo'}) }}" method="post">
+                <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></span></button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+<div class="d-flex justify-content-between mt-2">
+    {{ include('back/product/_delete_form.html.twig') }}
+    <a href="{{ path('back_product_index') }}">Retour à la liste</a>
+</div>
+{% endblock %}
