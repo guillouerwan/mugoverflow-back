@@ -8,16 +8,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 
 class MainColorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('mainHexa', TextType::class, [
-                'label' => 'Code hexadécimal (#code)',
-                'help' => 'Exemple : #021E00'
-            ])
+            ->add('mainHexa', ColorType::class)
             ->add('mainColorName', TextType::class, [
                 'label' => 'Nom de la couleur',
             ])

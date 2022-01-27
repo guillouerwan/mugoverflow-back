@@ -14,7 +14,7 @@
             <img src="{{ asset('uploads/images/' ~ product.mockupFront) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupFront'}) }}" method="post">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupFront'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path
@@ -30,7 +30,7 @@
             <img src="{{ asset('uploads/images/' ~ product.mockupBack) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupBack'}) }}" method="post">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupBack'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path
@@ -46,7 +46,7 @@
             <img src="{{ asset('uploads/images/' ~ product.image) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'image'}) }}" method="post">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'image'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path
@@ -62,7 +62,7 @@
             <img src="{{ asset('uploads/images/' ~ product.logo) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'logo'}) }}" method="post">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'logo'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path

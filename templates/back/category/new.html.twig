@@ -3,9 +3,10 @@
 {% block title %}Nouvelle catégorie{% endblock %}
 
 {% block body %}
-    <h1>Créer une nouvelle catégorie</h1>
+    <h1>Création d'une nouvelle catégorie</h1>
 
     {{ include('back/category/_form.html.twig') }}
-
-    <a href="{{ path('back_category_index') }}">retour à la liste</a>
+<div class="d-flex justify-content-end mt-2">
+    <a href="{{ path('back_category_index') }}">Retour à la liste</a>
+    </div>
 {% endblock %}
