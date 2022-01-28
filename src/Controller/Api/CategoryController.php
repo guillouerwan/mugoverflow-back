@@ -30,14 +30,20 @@ class CategoryController extends AbstractController
             // Les en-têtes de réponse à ajouter (aucune)
             [],
             // Les groupes à utiliser par le Serializer
-            ['groups' => 'get_categories']
-        ); 
+            [
+            'groups' => [
+                // Le groupe des catégories
+                'get_categories',
+                // Le groupe des products
+                'get_products'
+            ]
+        ]);
       
     }    
      
          /**
      * Get all products of one category
-     * @Route("/api/category/{id<\d+>}/products", name="api_products_get_category", methods={"GET"})
+     * @Route("/api/categories/{id<\d+>}/products", name="api_products_get_category", methods={"GET"})
      */
     public function getProductsOfCategory(Category $category = null, ProductRepository $productRepository): Response
     {

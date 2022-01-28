@@ -19,13 +19,14 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     
+     * @Groups({"get_categories", "get_category"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank
+     * @Groups({"get_categories", "get_category"})
     */
     private $name;
 
