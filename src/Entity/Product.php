@@ -20,12 +20,14 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get_product", "get_categories", "get_category"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank
+     * @Groups({"get_products", "get_product"})
      */
     private $name;
 
@@ -44,21 +46,25 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Groups({"get_products", "get_product"})
      */
     private $mockupBack;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Groups({"get_products", "get_product"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Groups({"get_products", "get_product"})
      */
     private $logo;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"get_products", "get_product"})
      */
     private $status;
 
@@ -75,16 +81,19 @@ class Product
     /**
      * @ORM\ManyToOne(targetEntity=MainColor::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get_products", "get_product"})
      */
     private $mainColor;
 
     /**
      * @ORM\ManyToOne(targetEntity=SecondaryColor::class, inversedBy="products")
+     * @Groups({"get_products", "get_product"})
      */
     private $secondaryColor;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
+     * @Groups({"get_products", "get_product"})
      */
     private $user;
 
