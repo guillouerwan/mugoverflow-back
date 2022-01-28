@@ -67,7 +67,7 @@ class AppFixtures extends Fixture
         $superAdmin->setRoles(['ROLE_SUPERADMIN']);
         $superAdmin->setPassword('$2y$13$/XcKyU1CpuiamaCJkTiz7OddqrPuelpyrRK.WsGTkHh9kFIn0hu8y');
         $superAdmin->setFirstname('PrenomSuperAdmin');
-        $superAdmin->setLastname('PrenomSuperAdmin');
+        $superAdmin->setLastname('NomSuperAdmin');
         $superAdmin->setStatus(['STAFF']);
         $manager->persist($superAdmin);
 
@@ -77,7 +77,7 @@ class AppFixtures extends Fixture
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setPassword('$2y$13$BxiBaD6.LMpM8abdO/40few.yL/WKVpT2i7XcgL2vA6eSl1CKiopS');
         $admin->setFirstname('PrenomAdmin');
-        $admin->setLastname('PrenomAdmin');
+        $admin->setLastname('NomAdmin');
         $admin->setStatus(['STAFF']);
         $manager->persist($admin);
 

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{# ... #}
+
+{% block body %}
+    <div class="row justify-content-md-center my-4">
+        <div class="col col-lg-3">
+            <h2>Connexion</h2>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <p>Vous êtes connecté en tant que {{ app.user.email }}</p>
+            <a href="{{ path('back_product_index')}}">Retour à la page d'accueil</a>
+            <a class="btn btn-danger my-2" href="{{ path('login_logout') }}">Déconnexion</a>
+            {% else %}
+            {% if error %}
+            <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+            {% endif %}
+            <form action="{{ path('login') }}" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Adresse email</label>
+                    <input type="email" class="form-control" id="username" name="_username" value="{{ last_username }}">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" name="_password">
+                </div>
+                {# If you want to control the URL the user is redirected to on success
+                <input type="hidden" name="_target_path" value="/account" /> #}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="btn btn-primary">login</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
