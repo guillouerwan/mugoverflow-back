@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use App\Entity\Promo;
+use App\Entity\Status;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,13 +21,11 @@ class UserType extends AbstractType
             ->add('email', EmailType::class)
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Etudiant' => "STUDENT",
-                    'Staff' => "STAFF",
-                ],
-                'multiple' => true,
-                'expanded' => true,
+            ->add('status', EntityType::class, [
+                'class' => Status::class,
+                'choice_label' => 'name',
+                'multiple' => false,
+                'expanded' => false
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [

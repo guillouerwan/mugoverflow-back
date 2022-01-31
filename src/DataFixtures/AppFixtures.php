@@ -14,6 +14,7 @@ use App\Entity\SecondaryColor;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\DataFixtures\Provider\MugOverflowProvider;
+use App\Entity\Status;
 
 class AppFixtures extends Fixture
 {
@@ -38,6 +39,7 @@ class AppFixtures extends Fixture
         $this->connection->executeQuery('TRUNCATE TABLE product');
         $this->connection->executeQuery('TRUNCATE TABLE product_category');
         $this->connection->executeQuery('TRUNCATE TABLE promo');
+        $this->connection->executeQuery('TRUNCATE TABLE status');
         $this->connection->executeQuery('TRUNCATE TABLE secondary_color');
         $this->connection->executeQuery('TRUNCATE TABLE user');
         // etc.
@@ -68,7 +70,6 @@ class AppFixtures extends Fixture
         $superAdmin->setPassword('$2y$13$/XcKyU1CpuiamaCJkTiz7OddqrPuelpyrRK.WsGTkHh9kFIn0hu8y');
         $superAdmin->setFirstname('PrenomSuperAdmin');
         $superAdmin->setLastname('NomSuperAdmin');
-        $superAdmin->setStatus(['STAFF']);
         $manager->persist($superAdmin);
 
         // admin
@@ -78,7 +79,6 @@ class AppFixtures extends Fixture
         $admin->setPassword('$2y$13$BxiBaD6.LMpM8abdO/40few.yL/WKVpT2i7XcgL2vA6eSl1CKiopS');
         $admin->setFirstname('PrenomAdmin');
         $admin->setLastname('NomAdmin');
-        $admin->setStatus(['STAFF']);
         $manager->persist($admin);
 
         // user
@@ -88,7 +88,6 @@ class AppFixtures extends Fixture
         $user->setPassword('$2y$13$8ScmTQEkvTam.GE3.X4ol..Ayj6YkJ6Z.iQKsKaiD0aK6Y5ZFLt6O');
         $user->setFirstname('PrenomUser');
         $user->setLastname('NomUser');
-        $user->setStatus(['STUDENT']);
         $manager->persist($user);
 
         $userList = [$superAdmin, $admin, $user];
@@ -110,6 +109,20 @@ class AppFixtures extends Fixture
 
             $manager->persist($promo);
         }
+
+
+        // Staus
+
+        $status = new Status();
+        $status->setName('Etudiant');
+        $status->addUser($userList[2]);
+        $manager->persist($status);
+
+        $status = new Status();
+        $status->setName('Staff');
+        $status->addUser($userList[0]);
+        $status->addUser($userList[1]);
+        $manager->persist($status);
 
         // Catégory
 
@@ -146,8 +159,6 @@ class AppFixtures extends Fixture
         $secondaryColor->setStatus(2);
 
         $manager->persist($secondaryColor);
-
-
 
         // Product
         for ($i=1; $i < 10; $i++) { 
