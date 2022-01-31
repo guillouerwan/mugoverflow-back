@@ -51,5 +51,23 @@ class ProductController extends AbstractController
 
         return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
+
+    /**
+     * Get ten random products
+     * 
+     * @Route("/api/products/random", name="api_products_get_item_random", methods={"GET"})
+     */
+    public function getItemRandom(ProductRepository $productRepository): Response
+    {
+        // You have to look for the products 
+            $randomsProducts = $productRepository->findTenRandomProducts();
+
+        return $this->json(
+            $randomsProducts,
+            Response::HTTP_OK,
+            [],
+            ['groups' => 'get_products']
+        );
+    }
       
 }
