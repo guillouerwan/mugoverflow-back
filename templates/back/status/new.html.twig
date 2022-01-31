@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'un nouveau status{% endblock %}
+
+{% block body %}
+    <h1>Création d'un nouveau status</h1>
+
+    {{ include('back/status/_form.html.twig') }}
+    <div class="d-flex justify-content-end mt-2">
+    <a href="{{ path('back_status_index') }}">Retour à la liste</a>
+    </div>
+{% endblock %}

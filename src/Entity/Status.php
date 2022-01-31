@@ -25,6 +25,7 @@ class Status
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"user", "get_status"})
+     * @Assert\NotBlank
      */
     private $name;
 
