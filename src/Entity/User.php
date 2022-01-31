@@ -58,12 +58,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"user"})
-     */
-    private $status = [];
-
-    /**
-     * @ORM\Column(type="json")
      */
     private $roles = [];
 
@@ -85,6 +79,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $image;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="users")
+     * @Groups({"user"})
+     */
+    private $status;
 
     public function __construct()
     {
@@ -186,18 +186,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getStatus(): ?array
-    {
-        return $this->status;
-    }
-
-    public function setStatus(array $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */
@@ -266,6 +254,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
