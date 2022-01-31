@@ -26,12 +26,13 @@ class ProductType extends AbstractType
             ])
             ->add('description')
             ->add('mockupFront', FileType::class, [
+                'label' => 'Mockup Front (Aperçu avant du mug)',
                 'mapped' => false,
                 'required' => false,
                 'help' => 'Upload de l\'image si ajout ou remplacement sinon laissez vide.',
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png'
@@ -40,13 +41,14 @@ class ProductType extends AbstractType
                     ])
                 ],
             ])
-            ->add('mockupBack', FileType::class, [
+            ->add('mockupOverview', FileType::class, [
+                'label' => 'Mockup Overview (Aperçu général)',
                 'mapped' => false,
                 'required' => false,
                 'help' => 'Upload de l\'image si ajout ou remplacement sinon laissez vide.',
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png'
@@ -55,13 +57,14 @@ class ProductType extends AbstractType
                     ])
                 ],
             ])
-            ->add('image', FileType::class, [
+            ->add('assetFront', FileType::class, [
+                'label' => 'Asset front',
                 'mapped' => false,
                 'required' => false,
                 'help' => 'Upload de l\'image si ajout ou remplacement sinon laissez vide.',
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png'
@@ -70,13 +73,14 @@ class ProductType extends AbstractType
                     ])
                 ],
             ])
-            ->add('logo', FileType::class, [
+            ->add('assetBack', FileType::class, [
+                'label' => 'Asset back (ou logo)',
                 'mapped' => false,
                 'required' => false,
                 'help' => 'Upload de l\'image si ajout ou remplacement sinon laissez vide.',
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png'

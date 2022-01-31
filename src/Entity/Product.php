@@ -48,19 +48,19 @@ class Product
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"get_products", "get_product"})
      */
-    private $mockupBack;
+    private $mockupOverview;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"get_products", "get_product"})
      */
-    private $image;
+    private $assetFront;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"get_products", "get_product"})
      */
-    private $logo;
+    private $assetBack;
 
     /**
      * @ORM\Column(type="integer")
@@ -150,38 +150,38 @@ class Product
         return $this;
     }
 
-    public function getMockupBack(): ?string
+    public function getMockupOverview(): ?string
     {
-        return $this->mockupBack;
+        return $this->mockupOverview;
     }
 
-    public function setMockupBack(?string $mockupBack): self
+    public function setMockupOverview(?string $mockupOverview): self
     {
-        $this->mockupBack = $mockupBack;
+        $this->mockupOverview = $mockupOverview;
 
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getAssetFront(): ?string
     {
-        return $this->image;
+        return $this->assetFront;
     }
 
-    public function setImage(?string $image): self
+    public function setAssetFront(?string $assetFront): self
     {
-        $this->image = $image;
+        $this->assetFront = $assetFront;
 
         return $this;
     }
 
-    public function getLogo(): ?string
+    public function getAssetBack(): ?string
     {
-        return $this->logo;
+        return $this->assetBack;
     }
 
-    public function setLogo(?string $logo): self
+    public function setAssetBack(?string $assetBack): self
     {
-        $this->logo = $logo;
+        $this->assetBack = $assetBack;
 
         return $this;
     }

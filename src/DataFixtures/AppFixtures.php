@@ -161,9 +161,9 @@ class AppFixtures extends Fixture
             // Set random paragraph
             $product->setDescription($faker->paragraph(2));
             // Set images
-            $product->setLogo('logotest.png');
-            $product->setImage('imagetest'.mt_rand(1, 6).'.jpg');
-            $product->setMockupBack('mockupbacktest.jpg');
+            $product->setAssetBack('logotest.png');
+            $product->setAssetFront('imagetest'.mt_rand(1, 6).'.jpg');
+            $product->setMockupOverview('mockupoverviewtest.jpg');
             $product->setMockupFront('mockupfronttest.jpg');
             
             // We add random number category by product

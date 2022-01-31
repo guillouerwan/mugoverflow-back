@@ -24,13 +24,13 @@
         </div>
     </div>
     {% endif %}
-    {% if product.mockupBack != null %}
+    {% if product.mockupOverview != null %}
     <div class="my-1 d-flex">
         <div>
-            <img src="{{ asset('uploads/images/' ~ product.mockupBack) }}" alt="" width="40px">
+            <img src="{{ asset('uploads/images/' ~ product.mockupOverview) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupBack'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'mockupOverview'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path
@@ -40,13 +40,13 @@
         </div>
     </div>
     {% endif %}
-    {% if product.image != null %}
+    {% if product.assetFront != null %}
     <div class="my-1 d-flex">
         <div>
-            <img src="{{ asset('uploads/images/' ~ product.image) }}" alt="" width="40px">
+            <img src="{{ asset('uploads/images/' ~ product.assetFront) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'image'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'assetFront'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path
@@ -56,13 +56,13 @@
         </div>
     </div>
     {% endif %}
-    {% if product.logo != null %}
+    {% if product.assetBack != null %}
     <div class="my-1 d-flex">
         <div>
-            <img src="{{ asset('uploads/images/' ~ product.logo) }}" alt="" width="40px">
+            <img src="{{ asset('uploads/images/' ~ product.assetBack) }}" alt="" width="40px">
         </div>
         <div>
-            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'logo'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
+            <form action="{{ path('back_product_picture', {'id': product.id, 'image':'assetBack'}) }}" method="post" onsubmit="return confirm('Êtes-vous sur de vouloir supprimer cette image ?');">
                 <button type="submit" class="btn btn-link"><span>supprimer <svg xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                             <path
