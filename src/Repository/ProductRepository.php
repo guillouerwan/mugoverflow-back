@@ -27,13 +27,13 @@ class ProductRepository extends ServiceEntityRepository
             $dbalConnection = $this->getEntityManager()->getConnection();
 
         // The SQL query 
-        $sql = 'SELECT name
+        $sql = 'SELECT *
             FROM `product`
             ORDER BY RAND()
             LIMIT 10';
         
         // We execute and we fetch in an associative array 
-        $result = $dbalConnection->executeQuery($sql)->fetchAssociative();
+        $result = $dbalConnection->executeQuery($sql)->fetchAllAssociative();
 
         return $result;
     }
