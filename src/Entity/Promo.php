@@ -18,12 +18,13 @@ class Promo
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user", "get_promos"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"user"})
+     * @Groups({"user", "get_promos"})
      * @Assert\NotBlank
      * @Assert\Length(
      *      max = 64,

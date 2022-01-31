@@ -23,7 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"user"})
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_products", "get_product", "get_promos"})
      */
     private $id;
 
@@ -36,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64, )
-     * @Groups({"user"})
+     * @Groups({"user", "get_promos"})
      * @Assert\NotBlank
      * @Groups({"get_products", "get_product"})
      */
@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"user"})
+     * @Groups({"user", "get_promos"})
      * @Assert\NotBlank
      * @Groups({"get_products", "get_product"})
      */
