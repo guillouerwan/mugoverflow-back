@@ -5,15 +5,22 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Form\EditProfilType;
 use App\Form\UpdatePasswordType;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -66,6 +73,68 @@ class UserController extends AbstractController
             [],
             ['groups' => 'user']
         );
+    }
+
+    /**
+     * For updload a profil image
+     * 
+     * @Route("/api/profil/image", name="api_user_image", methods={"POST"})
+     */
+    public function imageProfil(Request $request, ValidatorInterface $validator, SluggerInterface $slugger, EntityManagerInterface $entityManager, UserRepository $userRepository, Filesystem $filesystem){
+        // We get the user
+        $user = $userRepository->find($this->getUser());
+
+        // Get the image and check if it's present
+        $uploadedFile = $request->files->get('imageFile');
+
+        if (!$uploadedFile) {
+            throw new BadRequestHttpException('"imageFile" is required');
+        }
+
+        // If it's present we check the file uploaded
+        $errors = $validator->validate($uploadedFile, [
+            new Image([
+                'maxSize' => '1024k',
+                'mimeTypes' => [
+                    'image/jpeg',
+                    'image/png'
+                ],
+                'mimeTypesMessage' => 'Merci d\uploader un fichier au format jpeg ou png',
+            ]),
+        ]);
+
+        if (count($errors) > 0) {
+            return $this->json($errors, Response::HTTP_BAD_REQUEST);
+        }
+
+        // We make the modifications in the folder and BDD
+        if ($uploadedFile) {
+            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+            try {
+                $uploadedFile->move(
+                    $this->getParameter('image_profil_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                return $this->json($e, Response::HTTP_BAD_REQUEST);
+            }
+
+            if($user->getImage()){
+                $path = $this->getParameter('image_profil_directory').'/'.$user->getImage();
+                $filesystem->remove($path);
+            }
+
+            $user->setImage($newFilename);
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->json(
+                "Votre image de profil à bien été mise à jour.", 
+                200
+            );
+        }
     }
 
     /**
