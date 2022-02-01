@@ -48,7 +48,10 @@
                 <td colspan="11">no records found</td>
             </tr>
         {% endfor %}
+        
         </tbody>
     </table>
-
+    <div class="navigation">
+        {{ knp_pagination_render(products) }}
+        </div>
 {% endblock %}
