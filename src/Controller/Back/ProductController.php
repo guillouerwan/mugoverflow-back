@@ -121,6 +121,8 @@ class ProductController extends AbstractController
 
                 $product->setAssetBack($newFilename);
             }
+            $slugName = $slugger->slug($product->getName());
+            $product->setSlug($slugName);
 
             $entityManager->persist($product);
             $entityManager->flush();
@@ -240,6 +242,9 @@ class ProductController extends AbstractController
             }
 
             $product->setUpdatedAt(new DateTime());
+
+            $slugName = $slugger->slug($product->getName());
+            $product->setSlug($slugName);
 
             $entityManager->flush();
 

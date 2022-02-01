@@ -21,7 +21,6 @@ class ProductController extends AbstractController
     {
         $productsList = $productRepository->findAll();
 
-      
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
             $productsList,
@@ -32,7 +31,6 @@ class ProductController extends AbstractController
             // Les groupes à utiliser par le Serializer
             ['groups' => 'get_products']
         ); 
-
        
     }        
 
@@ -40,7 +38,7 @@ class ProductController extends AbstractController
     /**
      * Get one products with id
      * 
-     * @Route("/api/products/{id<\d+>}", name="api_product", methods={"GET"})
+     * @Route("/api/products/{slug}", name="api_product", methods={"GET"})
      */
     public function getProduct(Product $product = null)
     {
@@ -51,6 +49,7 @@ class ProductController extends AbstractController
 
         return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
+    
 
     /**
      * Get ten random products
