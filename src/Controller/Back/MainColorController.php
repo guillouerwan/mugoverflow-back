@@ -6,10 +6,11 @@ use App\Entity\MainColor;
 use App\Form\MainColorType;
 use App\Repository\MainColorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/back/maincolor")
@@ -19,10 +20,17 @@ class MainColorController extends AbstractController
     /**
      * @Route("/", name="back_main_color_index", methods={"GET"})
      */
-    public function index(MainColorRepository $mainColorRepository): Response
+    public function index(MainColorRepository $mainColorRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $donnees = $mainColorRepository->findAll();
+
+        $mainColors = $paginator->paginate(
+            $donnees, 
+            $request->query->getInt('page', 1), 
+            5 
+        );
         return $this->render('back/main_color/index.html.twig', [
-            'main_colors' => $mainColorRepository->findAll(),
+            'main_colors' => $mainColors,
         ]);
     }
 

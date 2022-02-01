@@ -6,10 +6,11 @@ use App\Entity\Status;
 use App\Form\StatusType;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/back/status")
@@ -19,10 +20,17 @@ class StatusController extends AbstractController
     /**
      * @Route("/", name="back_status_index", methods={"GET"})
      */
-    public function index(StatusRepository $statusRepository): Response
+    public function index(StatusRepository $statusRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $donnees = $statusRepository->findAll();
+
+        $statuses = $paginator->paginate(
+            $donnees, 
+            $request->query->getInt('page', 1), 
+            5 
+        );
         return $this->render('back/status/index.html.twig', [
-            'statuses' => $statusRepository->findAll(),
+            'statuses' => $statuses,
         ]);
     }
 
