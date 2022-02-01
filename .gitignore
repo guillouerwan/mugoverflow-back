@@ -7,12 +7,6 @@
 /public/bundles/
 /var/
 /vendor/
-/public/uploads/images/*.jpg
-/public/uploads/images/*.png
-/public/uploads/images_categories/*.jpg
-/public/uploads/images_categories/*.png
-/public/uploads/images_users/*.jpg
-/public/uploads/images_users/*.png
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
