@@ -114,7 +114,7 @@ class UserController extends AbstractController
             $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
             try {
                 $uploadedFile->move(
-                    $this->getParameter('image_profil_directory'),
+                    $this->getParameter('images_profil_directory'),
                     $newFilename
                 );
             } catch (FileException $e) {
