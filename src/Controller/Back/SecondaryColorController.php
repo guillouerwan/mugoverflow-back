@@ -4,12 +4,13 @@ namespace App\Controller\Back;
 
 use App\Entity\SecondaryColor;
 use App\Form\SecondaryColorType;
-use App\Repository\SecondaryColorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\SecondaryColorRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/back/secondarycolor")
@@ -19,10 +20,17 @@ class SecondaryColorController extends AbstractController
     /**
      * @Route("/", name="back_secondary_color_index", methods={"GET"})
      */
-    public function index(SecondaryColorRepository $secondaryColorRepository): Response
+    public function index(SecondaryColorRepository $secondaryColorRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $donnees = $secondaryColorRepository->findAll();
+
+        $secondaryColors = $paginator->paginate(
+            $donnees, 
+            $request->query->getInt('page', 1), 
+            5 
+        );
         return $this->render('back/secondary_color/index.html.twig', [
-            'secondary_colors' => $secondaryColorRepository->findAll(),
+            'secondary_colors' => $secondaryColors,
         ]);
     }
 
