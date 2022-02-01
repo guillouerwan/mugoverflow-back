@@ -66,7 +66,7 @@ class CategoryController extends AbstractController
             
             $entityManager->persist($category);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Nouvelle catégorie ajoutée');
             return $this->redirectToRoute('back_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -121,7 +121,7 @@ class CategoryController extends AbstractController
             $slugName = $sluggerInterface->slug($category->getName())->lower();
             $category->setSlug($slugName);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Catégorie modifiée');
             return $this->redirectToRoute('back_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -140,7 +140,7 @@ class CategoryController extends AbstractController
             $entityManager->remove($category);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', 'Catégorie supprimée');
         return $this->redirectToRoute('back_category_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -135,7 +135,7 @@ class ProductController extends AbstractController
 
             $entityManager->persist($product);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Produit ajouté');
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -262,7 +262,7 @@ class ProductController extends AbstractController
 
             $slugName = $slugger->slug($product->getName())->lower();
             $product->setSlug($slugName);
-
+            $this->addFlash('success', 'Produit modifié');
             $entityManager->flush();
 
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
@@ -281,6 +281,7 @@ class ProductController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
             $entityManager->remove($product);
+            $this->addFlash('success', 'Produit supprimé');
             $entityManager->flush();
         }
 
@@ -314,7 +315,7 @@ class ProductController extends AbstractController
         }
 
         $entityManager->flush();
-
+        $this->addFlash('success', 'Image supprimée');
         return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
     }
 }
