@@ -6,10 +6,12 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @Route("/back/category")
@@ -29,13 +31,39 @@ class CategoryController extends AbstractController
     /**
      * @Route("/new", name="back_category_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $sluggerInterface): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $image = $form->get('image')->getData();
+
+            if ($image) {
+                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
+                try {
+                    $image->move(
+                        $this->getParameter('images_categories_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'image');
+                    return $this->renderForm('back/product/new.html.twig', [
+                        'category' => $category,
+                        'form' => $form,
+                    ]);
+                }
+
+                $category->setImage($newFilename);
+            }
+            
+            $slugName = $sluggerInterface->slug($category->getName());
+            $category->setSlug($slugName);
+            
             $entityManager->persist($category);
             $entityManager->flush();
 
@@ -61,12 +89,37 @@ class CategoryController extends AbstractController
     /**
      * @Route("/{id}/edit", name="back_category_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Category $category, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Category $category, EntityManagerInterface $entityManager, SluggerInterface $sluggerInterface): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $image = $form->get('image')->getData();
+
+            if ($image) {
+                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
+                try {
+                    $image->move(
+                        $this->getParameter('images_categories_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'image');
+                    return $this->renderForm('back/product/new.html.twig', [
+                        'category' => $category,
+                        'form' => $form,
+                    ]);
+                }
+
+                $category->setImage($newFilename);
+            }
+
+            $slugName = $sluggerInterface->slug($category->getName());
+            $category->setSlug($slugName);
             $entityManager->flush();
 
             return $this->redirectToRoute('back_category_index', [], Response::HTTP_SEE_OTHER);
