@@ -75,5 +75,37 @@ class CategoryController extends AbstractController
     }
 
 
+    /**
+     * Get all products of one category
+     * @Route("/api/categories/{slug}/products", name="api_products_get_category", methods={"GET"})
+     */
+    public function getProductsOfCategoryBySlug(Category $category, ProductRepository $productRepository): Response
+    {
+        // 404 ?
+        if ($category=== null) {
+            return $this->json(['error' => 'catégorie non trouvé.'], Response::HTTP_NOT_FOUND);
+        }
+
+        $productList = $category->getProducts();
+       
+        // Tableau PHP à convertir en JSON
+        $data = [
+            'category' => $category,
+            'products' => $productList,
+        ];
+
+        return $this->json(
+        $data,
+        Response::HTTP_OK,
+        [],
+        [
+            'groups' => [
+                // Le groupe des catégories
+                'get_categories',
+                // Le groupe des products
+                'get_products'
+            ]
+        ]);
+}
     
 }
