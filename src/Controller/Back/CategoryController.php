@@ -61,7 +61,7 @@ class CategoryController extends AbstractController
                 $category->setImage($newFilename);
             }
             
-            $slugName = $sluggerInterface->slug($category->getName());
+            $slugName = $sluggerInterface->slug($category->getName())->lower();
             $category->setSlug($slugName);
             
             $entityManager->persist($category);
@@ -118,7 +118,7 @@ class CategoryController extends AbstractController
                 $category->setImage($newFilename);
             }
 
-            $slugName = $sluggerInterface->slug($category->getName());
+            $slugName = $sluggerInterface->slug($category->getName())->lower();
             $category->setSlug($slugName);
             $entityManager->flush();
 

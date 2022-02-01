@@ -130,7 +130,7 @@ class ProductController extends AbstractController
 
                 $product->setAssetBack($newFilename);
             }
-            $slugName = $slugger->slug($product->getName());
+            $slugName = $slugger->slug($product->getName())->lower();
             $product->setSlug($slugName);
 
             $entityManager->persist($product);
@@ -158,7 +158,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/{id}/edit", name="back_product_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger, Filesystem $filesystem): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -186,6 +186,8 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
+                $path = $this->getParameter('images_directory').'/'.$product->getMockupFront();
+                $filesystem->remove($path);
 
                 $product->setMockupFront($newFilename);
             }
@@ -206,6 +208,8 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
+                $path = $this->getParameter('images_directory').'/'.$product->getMockupOverview();
+                $filesystem->remove($path);
 
                 $product->setMockupOverview($newFilename);
             }
@@ -226,6 +230,8 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
+                $path = $this->getParameter('images_directory').'/'.$product->getAssetFront();
+                $filesystem->remove($path);
                 
                 $product->setAssetFront($newFilename);
             }
@@ -246,13 +252,15 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-
+                $path = $this->getParameter('images_directory').'/'.$product->getAssetBack();
+                $filesystem->remove($path);
+                
                 $product->setAssetBack($newFilename);
             }
 
             $product->setUpdatedAt(new DateTime());
 
-            $slugName = $slugger->slug($product->getName());
+            $slugName = $slugger->slug($product->getName())->lower();
             $product->setSlug($slugName);
 
             $entityManager->flush();
