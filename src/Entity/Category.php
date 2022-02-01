@@ -19,14 +19,14 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get_categories", "get_category"})
+     * @Groups({"get_categories", "get_category", "get_product", "get_products"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank
-     * @Groups({"get_categories", "get_category"})
+     * @Groups({"get_categories", "get_category", "get_product", "get_products"})
     */
     private $name;
 
@@ -45,7 +45,7 @@ class Category
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get_categories", "get_category"})
+     * @Groups({"get_categories", "get_category","get_product", "get_products"})
      */
     private $slug;
 

@@ -100,6 +100,7 @@ class Product
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="products")
      * @Assert\Count(min=1, minMessage= "Merci de sélectionner au minimum une catégorie")
+     * @Groups({"get_product", "get_products"})
      */
     private $category;
 
