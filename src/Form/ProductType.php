@@ -48,7 +48,7 @@ class ProductType extends AbstractType
                 'help' => 'Upload de l\'image si ajout ou remplacement sinon laissez vide.',
                 'constraints' => [
                     new File([
-                        'maxSize' => '2048k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png'
