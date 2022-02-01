@@ -52,19 +52,19 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_product"})
      */
     private $assetFront;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_product"})
      */
     private $assetBack;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_product"})
      */
     private $status;
 
@@ -81,19 +81,19 @@ class Product
     /**
      * @ORM\ManyToOne(targetEntity=MainColor::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_product"})
      */
     private $mainColor;
 
     /**
      * @ORM\ManyToOne(targetEntity=SecondaryColor::class, inversedBy="products")
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_product"})
      */
     private $secondaryColor;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="products")
-     * @Groups({"get_products", "get_product"})
+     * @Groups({"get_product"})
      */
     private $user;
 
