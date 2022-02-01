@@ -39,8 +39,8 @@ class Category
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="category")
-     * @Groups({"get_categories", "get_category"})
-         */
+     * @Groups({"get_category"})
+    */
     private $products;
 
     /**
