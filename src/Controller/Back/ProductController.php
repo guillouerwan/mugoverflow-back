@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Service\PicturesManager;
 use Symfony\Component\Filesystem\Path;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -186,8 +187,6 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-                $path = $this->getParameter('images_directory').'/'.$product->getMockupFront();
-                $filesystem->remove($path);
 
                 $product->setMockupFront($newFilename);
             }
@@ -208,8 +207,6 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-                $path = $this->getParameter('images_directory').'/'.$product->getMockupOverview();
-                $filesystem->remove($path);
 
                 $product->setMockupOverview($newFilename);
             }
@@ -230,8 +227,6 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-                $path = $this->getParameter('images_directory').'/'.$product->getAssetFront();
-                $filesystem->remove($path);
                 
                 $product->setAssetFront($newFilename);
             }
@@ -252,8 +247,6 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-                $path = $this->getParameter('images_directory').'/'.$product->getAssetBack();
-                $filesystem->remove($path);
                 
                 $product->setAssetBack($newFilename);
             }
@@ -291,28 +284,12 @@ class ProductController extends AbstractController
     /**
      * @Route("/{id}/{image}", name="back_product_picture", methods={"POST"})
      */
-    public function deletePicture($image, Product $product, EntityManagerInterface $entityManager, Filesystem $filesystem)
+    public function deletePicture($image, Product $product, EntityManagerInterface $entityManager, PicturesManager $picturesManager)
     {
-        if ($image === "mockupFront"){
-            $path = $this->getParameter('images_directory').'/'.$product->getMockupFront();
-            $filesystem->remove($path);
-            $product->setMockupFront(null);
-        }
-        if ($image === "mockupOverview"){
-            $path = $this->getParameter('images_directory').'/'.$product->getMockupOverview();
-            $filesystem->remove($path);
-            $product->setMockupOverview(null);
-        }
-        if ($image === "assetFront"){
-            $path = $this->getParameter('images_directory').'/'.$product->getAssetFront();
-            $filesystem->remove($path);
-            $product->setAssetFront(null);
-        }
-        if ($image === "assetBack"){
-            $path = $this->getParameter('images_directory').'/'.$product->getAssetBack();
-            $filesystem->remove($path);
-            $product->setAssetBack(null);
-        }
+        if(!$picturesManager->delete($product, $image)){
+            $this->addFlash('danger', 'Erreur durant la suppression de l\'image');
+            return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
+        };
 
         $entityManager->flush();
         $this->addFlash('success', 'Image supprimée');
