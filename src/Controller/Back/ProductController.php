@@ -44,7 +44,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/new", name="back_product_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, PicturesManager $picturesManager): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
@@ -56,81 +56,42 @@ class ProductController extends AbstractController
             $assetBackFile = $form->get('assetBack')->getData();
 
             if ($mockupFrontFile) {
-                $originalFilename = pathinfo($mockupFrontFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$mockupFrontFile->guessExtension();
-                try {
-                    $mockupFrontFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
+                if(!$picturesManager->add($product, 'mockupFront', $mockupFrontFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement du mockup front');
                     return $this->renderForm('back/product/new.html.twig', [
                         'product' => $product,
                         'form' => $form,
                     ]);
                 }
-
-                $product->setMockupFront($newFilename);
             }
             if ($mockupOverviewFile) {
-                $originalFilename = pathinfo($mockupOverviewFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$mockupOverviewFile->guessExtension();
-                try {
-                    $mockupOverviewFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('warning', 'Erreur durant le chargement du mockup back');
+                if(!$picturesManager->add($product, 'mockupOverview', $mockupOverviewFile, 'images_products_directory')){
+                    $this->addFlash('warning', 'Erreur durant le chargement du mockup overview');
                     return $this->renderForm('back/product/new.html.twig', [
                         'product' => $product,
                         'form' => $form,
                     ]);
                 }
-
-                $product->setMockupOverview($newFilename);
             }
             if ($assetFrontFile) {
-                $originalFilename = pathinfo($assetFrontFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$assetFrontFile->guessExtension();
-                try {
-                    $assetFrontFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('warning', 'Erreur durant le chargement de l\'image');
+                if(!$picturesManager->add($product, 'assetFront', $assetFrontFile, 'images_products_directory')){
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'asset front');
                     return $this->renderForm('back/product/new.html.twig', [
                         'product' => $product,
                         'form' => $form,
                     ]);
                 }
-
-                $product->setAssetFront($newFilename);
             }
             if ($assetBackFile) {
-                $originalFilename = pathinfo($assetBackFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$assetBackFile->guessExtension();
-                try {
-                    $assetBackFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('warning', 'Erreur durant le chargement du logo');
+                if(!$picturesManager->add($product, 'assetBack', $assetBackFile, 'images_products_directory')){
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'asset back');
                     return $this->renderForm('back/product/new.html.twig', [
                         'product' => $product,
                         'form' => $form,
                     ]);
                 }
-
-                $product->setAssetBack($newFilename);
             }
+
             $slugName = $slugger->slug($product->getName())->lower();
             $product->setSlug($slugName);
 
@@ -159,7 +120,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/{id}/edit", name="back_product_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger, Filesystem $filesystem): Response
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger, PicturesManager $picturesManager): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -169,17 +130,8 @@ class ProductController extends AbstractController
             $mockupOverviewFile = $form->get('mockupOverview')->getData();
             $assetFrontFile = $form->get('assetFront')->getData();
             $assetBackFile = $form->get('assetBack')->getData();
-            
             if ($mockupFrontFile) {
-                $originalFilename = pathinfo($mockupFrontFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$mockupFrontFile->guessExtension();
-                try {
-                    $mockupFrontFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
+                if(!$picturesManager->add($product, 'mockupFront', $mockupFrontFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement du mockup front');
                     return $this->redirectToRoute('back_product_index', [
                         'product' => $product,
@@ -187,68 +139,36 @@ class ProductController extends AbstractController
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-
-                $product->setMockupFront($newFilename);
             }
             if ($mockupOverviewFile) {
-                $originalFilename = pathinfo($mockupOverviewFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$mockupOverviewFile->guessExtension();
-                try {
-                    $mockupOverviewFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('warning', 'Erreur durant le chargement du mockup back');
+                if(!$picturesManager->add($product, 'mockupOverview', $mockupOverviewFile, 'images_products_directory')){
+                    $this->addFlash('warning', 'Erreur durant le chargement du mockup overview');
                     return $this->redirectToRoute('back_product_index', [
                         'product' => $product,
                         'form' => $form,
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-
-                $product->setMockupOverview($newFilename);
             }
             if ($assetFrontFile) {
-                $originalFilename = pathinfo($assetFrontFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$assetFrontFile->guessExtension();
-                try {
-                    $assetFrontFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('warning', 'Erreur durant le chargement de l\'image');
+                if(!$picturesManager->add($product, 'assetFront', $assetFrontFile, 'images_products_directory')){
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'asset front');
                     return $this->redirectToRoute('back_product_index', [
                         'product' => $product,
                         'form' => $form,
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-                
-                $product->setAssetFront($newFilename);
             }
             if ($assetBackFile) {
-                $originalFilename = pathinfo($assetBackFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$assetBackFile->guessExtension();
-                try {
-                    $assetBackFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('warning', 'Erreur durant le chargement du logo');
+                if(!$picturesManager->add($product, 'assetBack', $assetBackFile, 'images_products_directory')){
+                    $this->addFlash('warning', 'Erreur durant le chargement de l\'asset back');
                     return $this->redirectToRoute('back_product_index', [
                         'product' => $product,
                         'form' => $form,
                     ],
                     Response::HTTP_SEE_OTHER);
                 }
-                
-                $product->setAssetBack($newFilename);
             }
 
             $product->setUpdatedAt(new DateTime());
@@ -270,9 +190,21 @@ class ProductController extends AbstractController
     /**
      * @Route("/{id}", name="back_product_delete", methods={"POST"})
      */
-    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager, PicturesManager $picturesManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+            if($product->getMockupFront() !== null){
+                $picturesManager->delete($product, 'MockupFront', 'images_products_directory');
+            }
+            if($product->getMockupOverview() !== null){
+                $picturesManager->delete($product, 'MockupOverview', 'images_products_directory');
+            }
+            if($product->getAssetFront() !== null){
+                $picturesManager->delete($product, 'AssetFront', 'images_products_directory');
+            }
+            if($product->getAssetBack() !== null){
+                $picturesManager->delete($product, 'AssetBack', 'images_products_directory');
+            }
             $entityManager->remove($product);
             $this->addFlash('success', 'Produit supprimé');
             $entityManager->flush();
@@ -286,7 +218,7 @@ class ProductController extends AbstractController
      */
     public function deletePicture($image, Product $product, EntityManagerInterface $entityManager, PicturesManager $picturesManager)
     {
-        if(!$picturesManager->delete($product, $image)){
+        if(!$picturesManager->delete($product, $image, 'images_products_directory')){
             $this->addFlash('danger', 'Erreur durant la suppression de l\'image');
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
         };
