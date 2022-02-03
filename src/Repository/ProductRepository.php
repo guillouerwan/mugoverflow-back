@@ -38,6 +38,24 @@ class ProductRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * I want to collect the lastest products 
+     */
+    public function latestProducts()
+    {
+            $dbalConnection = $this->getEntityManager()->getConnection();
+
+        // The SQL query 
+        $sql = 'SELECT *
+            FROM `product`
+            ORDER BY created_at DESC
+            LIMIT 10';
+        
+        // We execute and we fetch in an associative array 
+        $result = $dbalConnection->executeQuery($sql)->fetchAllAssociative();
+
+        return $result;
+    }
              
     
     // /**
