@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;

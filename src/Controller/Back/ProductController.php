@@ -7,16 +7,13 @@ use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use App\Service\PicturesManager;
-use Symfony\Component\Filesystem\Path;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @Route("/back/product")
@@ -133,41 +130,25 @@ class ProductController extends AbstractController
             if ($mockupFrontFile) {
                 if(!$picturesManager->add($product, 'mockupFront', $mockupFrontFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement du mockup front');
-                    return $this->redirectToRoute('back_product_index', [
-                        'product' => $product,
-                        'form' => $form,
-                    ],
-                    Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
                 }
             }
             if ($mockupOverviewFile) {
                 if(!$picturesManager->add($product, 'mockupOverview', $mockupOverviewFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement du mockup overview');
-                    return $this->redirectToRoute('back_product_index', [
-                        'product' => $product,
-                        'form' => $form,
-                    ],
-                    Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
                 }
             }
             if ($assetFrontFile) {
                 if(!$picturesManager->add($product, 'assetFront', $assetFrontFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement de l\'asset front');
-                    return $this->redirectToRoute('back_product_index', [
-                        'product' => $product,
-                        'form' => $form,
-                    ],
-                    Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
                 }
             }
             if ($assetBackFile) {
                 if(!$picturesManager->add($product, 'assetBack', $assetBackFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement de l\'asset back');
-                    return $this->redirectToRoute('back_product_index', [
-                        'product' => $product,
-                        'form' => $form,
-                    ],
-                    Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
                 }
             }
 

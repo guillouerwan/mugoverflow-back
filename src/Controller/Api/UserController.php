@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Form\EditProfilType;
 use App\Form\UpdatePasswordType;
+use App\Service\PicturesManager;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -80,7 +81,7 @@ class UserController extends AbstractController
      * 
      * @Route("/api/profil/image", name="api_user_image", methods={"POST"})
      */
-    public function imageProfil(Request $request, ValidatorInterface $validator, SluggerInterface $slugger, EntityManagerInterface $entityManager, UserRepository $userRepository, Filesystem $filesystem){
+    public function imageProfil(Request $request, ValidatorInterface $validator, PicturesManager $picturesManager, EntityManagerInterface $entityManager, UserRepository $userRepository, Filesystem $filesystem){
         // We get the user
         $user = $userRepository->find($this->getUser());
 
@@ -109,24 +110,12 @@ class UserController extends AbstractController
 
         // We make the modifications in the folder and BDD
         if ($uploadedFile) {
-            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
-            try {
-                $uploadedFile->move(
-                    $this->getParameter('images_profil_directory'),
-                    $newFilename
+            if(!$picturesManager->add($user, 'Image', $uploadedFile, 'images_profil_directory')){
+                return $this->json(
+                    ['error' => 'Erreur durant le chargement de l\'image'],
+                    Response::HTTP_BAD_REQUEST
                 );
-            } catch (FileException $e) {
-                return $this->json($e, Response::HTTP_BAD_REQUEST);
             }
-
-            if($user->getImage()){
-                $path = $this->getParameter('image_profil_directory').'/'.$user->getImage();
-                $filesystem->remove($path);
-            }
-
-            $user->setImage($newFilename);
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -150,7 +139,7 @@ class UserController extends AbstractController
         } catch (NotEncodableValueException $e) {
             return $this->json(
                 ['error' => 'JSON invalide'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
+                Response::HTTP_BAD_REQUEST
             );
         }
 
