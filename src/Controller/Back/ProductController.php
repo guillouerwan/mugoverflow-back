@@ -32,7 +32,7 @@ class ProductController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
-
+        $products->setCustomParameters(['size' => 'small']);
         return $this->render('back/product/index.html.twig', [
             'products' => $products,
         ]);

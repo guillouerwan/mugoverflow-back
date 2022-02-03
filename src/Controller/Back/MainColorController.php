@@ -29,6 +29,7 @@ class MainColorController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
+        $mainColors->setCustomParameters(['size' => 'small']);
         return $this->render('back/main_color/index.html.twig', [
             'main_colors' => $mainColors,
         ]);

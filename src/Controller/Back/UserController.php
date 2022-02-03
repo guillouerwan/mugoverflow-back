@@ -30,6 +30,7 @@ class UserController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
+        $users->setCustomParameters(['size' => 'small']);
         return $this->render('back/user/index.html.twig', [
             'users' => $users,
         ]);

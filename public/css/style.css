@@ -23,6 +23,12 @@ table {
     color: #fffdd8!important;
 }
 
-.navigation a {
-    color: #1e2124!important;
+
+.page-link {
+    background-color: #32373c!important;
+}
+
+
+li.page-item.active > span{
+    border-color: #f5f1ad!important;
 }

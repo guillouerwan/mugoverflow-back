@@ -29,6 +29,7 @@ class SecondaryColorController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
+        $secondaryColors->setCustomParameters(['size' => 'small']);
         return $this->render('back/secondary_color/index.html.twig', [
             'secondary_colors' => $secondaryColors,
         ]);

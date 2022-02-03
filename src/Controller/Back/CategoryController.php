@@ -31,7 +31,7 @@ class CategoryController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
-
+        $categories->setCustomParameters(['size' => 'small']);
         return $this->render('back/category/index.html.twig', [
             'categories' => $categories,
         ]);

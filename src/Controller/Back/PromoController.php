@@ -29,6 +29,8 @@ class PromoController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
+        $promos->setCustomParameters(['size' => 'small']);
+
         return $this->render('back/promo/index.html.twig', [
             'promos' => $promos,
         ]);

@@ -29,6 +29,7 @@ class StatusController extends AbstractController
             $request->query->getInt('page', 1), 
             5 
         );
+        $statuses->setCustomParameters(['size' => 'small']);
         return $this->render('back/status/index.html.twig', [
             'statuses' => $statuses,
         ]);
