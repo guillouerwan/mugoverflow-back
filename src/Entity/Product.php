@@ -70,6 +70,7 @@ class Product
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"get_product", "get_products"})
      */
     private $createdAt;
 

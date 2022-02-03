@@ -24,18 +24,15 @@ class ProductRepository extends ServiceEntityRepository
      */
     public function findTenRandomProducts()
     {
-            $dbalConnection = $this->getEntityManager()->getConnection();
+        $entityManager = $this->getEntityManager();
 
-        // The SQL query 
-        $sql = 'SELECT *
-            FROM `product`
-            ORDER BY RAND()
-            LIMIT 10';
-        
-        // We execute and we fetch in an associative array 
-        $result = $dbalConnection->executeQuery($sql)->fetchAllAssociative();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            ORDER BY RAND()'
+        );
 
-        return $result;
+        return $query->setMaxResults(10)->getResult();
     }
 
     /**
@@ -43,20 +40,55 @@ class ProductRepository extends ServiceEntityRepository
      */
     public function latestProducts()
     {
-            $dbalConnection = $this->getEntityManager()->getConnection();
+        $entityManager = $this->getEntityManager();
 
-        // The SQL query 
-        $sql = 'SELECT *
-            FROM `product`
-            ORDER BY created_at DESC
-            LIMIT 10';
-        
-        // We execute and we fetch in an associative array 
-        $result = $dbalConnection->executeQuery($sql)->fetchAllAssociative();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            ORDER BY p.createdAt DESC'
+        );
 
-        return $result;
+        return $query->setMaxResults(10)->getResult();
     }
-             
+         
+    // First test with SQL
+    //     /**
+    //  * I want to collect 10 random products 
+    //  */
+    // public function findTenRandomProducts()
+    // {
+    //         $dbalConnection = $this->getEntityManager()->getConnection();
+
+    //     // The SQL query 
+    //     $sql = 'SELECT *
+    //         FROM `product`
+    //         ORDER BY RAND()
+    //         LIMIT 10';
+        
+    //     // We execute and we fetch in an associative array 
+    //     $result = $dbalConnection->executeQuery($sql)->fetchAllAssociative();
+
+    //     return $result;
+    // }
+
+    // /**
+    //  * I want to collect the lastest products 
+    //  */
+    // public function latestProducts()
+    // {
+    //         $dbalConnection = $this->getEntityManager()->getConnection();
+
+    //     // The SQL query 
+    //     $sql = 'SELECT *
+    //         FROM `product`
+    //         ORDER BY created_at DESC
+    //         LIMIT 10';
+        
+    //     // We execute and we fetch in an associative array 
+    //     $result = $dbalConnection->executeQuery($sql)->fetchAllAssociative();
+
+    //     return $result;
+    // }
     
     // /**
     //  * @return Product[] Returns an array of Product objects
