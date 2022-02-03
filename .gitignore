@@ -1,3 +1,7 @@
+###> images ###
+/public/uploads/images/.gitignore
+###< images ###
+
 ###> images_users ###
 /public/uploads/images_users/.gitignore
 ###< images_users ###
@@ -5,10 +9,6 @@
 ###> images_categories ###
 /public/uploads/images_categories/.gitignore
 ###< images_categories ###
-
-###> images ###
-/public/uploads/images/.gitignore
-###< images ###
 
 ###> symfony/framework-bundle ###
 /.env.local
