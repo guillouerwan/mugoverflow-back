@@ -20,7 +20,7 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get_product", "get_categories", "get_category"})
+     * @Groups({"get_product", "get_products", "get_categories", "get_category"})
      */
     private $id;
 
@@ -107,6 +107,7 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get_product", "get_products"})
      */
     private $slug;
 
