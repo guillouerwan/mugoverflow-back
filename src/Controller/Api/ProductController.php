@@ -24,13 +24,6 @@ class ProductController extends AbstractController
         $randomsProducts = $productRepository->findTenRandomProducts();
         $latestProducts = $productRepository->latestProducts();
 
-        if (!$request->get('type')){
-            return $this->json(
-                ['error' => 'JSON invalide'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
-
         if ($request->get('type')) {
             $type = $request->get('type');
             switch ($type) {
