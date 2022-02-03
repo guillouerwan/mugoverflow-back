@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edition du status : {{ status.name }}{% endblock %}
+{% block title %}Edition du statut : {{ status.name }}{% endblock %}
 
 {% block body %}
-    <h1>Edition du status : {{ status.name }}</h1>
+    <h1>Edition du statut : {{ status.name }}</h1>
 
     {{ include('back/status/_form.html.twig', {'button_label': 'Mise à jour'}) }}
     <div class="d-flex justify-content-between mt-2">
