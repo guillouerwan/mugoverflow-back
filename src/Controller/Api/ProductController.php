@@ -59,6 +59,21 @@ class ProductController extends AbstractController
             }
         }
 
+        if ($request->get('search')) {
+            $productsList = $productRepository->findBySearch($request->get('search'));
+
+            return $this->json(
+                // Les données à sérialiser (à convertir en JSON)
+                $productsList,
+                // Le status code
+                200,
+                // Les en-têtes de réponse à ajouter (aucune)
+                [],
+                // Les groupes à utiliser par le Serializer
+                ['groups' => 'get_products']
+            ); 
+        }
+
         $productsList = $productRepository->findAll();
 
         return $this->json(
@@ -89,5 +104,6 @@ class ProductController extends AbstractController
 
         return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
+
     
 }

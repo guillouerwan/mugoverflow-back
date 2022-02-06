@@ -50,6 +50,20 @@ class ProductRepository extends ServiceEntityRepository
 
         return $query->setMaxResults(10)->getResult();
     }
+
+    /**
+     * Find product by search
+     */
+    public function findBySearch($search)
+    {
+        return $this->createQueryBuilder('p')
+        ->where('p.name LIKE :val')
+        ->orderBy('p.createdAt', 'DESC')
+        ->setParameter('val', '%'.$search.'%')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
          
     // First test with SQL
     //     /**
