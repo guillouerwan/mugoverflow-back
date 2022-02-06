@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProductController extends AbstractController
 
 {
-    // 
+ 
     /**  Get all products
      *
      * @Route("/api/products", name="api_products", methods={"GET"})
@@ -63,13 +63,9 @@ class ProductController extends AbstractController
             $productsList = $productRepository->findBySearch($request->get('search'));
 
             return $this->json(
-                // Les données à sérialiser (à convertir en JSON)
                 $productsList,
-                // Le status code
                 200,
-                // Les en-têtes de réponse à ajouter (aucune)
                 [],
-                // Les groupes à utiliser par le Serializer
                 ['groups' => 'get_products']
             ); 
         }
@@ -77,13 +73,9 @@ class ProductController extends AbstractController
         $productsList = $productRepository->findAll();
 
         return $this->json(
-            // Les données à sérialiser (à convertir en JSON)
             $productsList,
-            // Le status code
             200,
-            // Les en-têtes de réponse à ajouter (aucune)
             [],
-            // Les groupes à utiliser par le Serializer
             ['groups' => 'get_products']
         ); 
        
