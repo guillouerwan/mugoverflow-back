@@ -131,7 +131,7 @@ class UserController extends AbstractController
      * 
      * @Route("/api/register", name="api_user_register", methods={"POST"})
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
+    public function register(Request $request, JWTTokenManagerInterface $JWTManager, UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializer, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
     {
         // Retrieval of necessary data
         try {
@@ -172,8 +172,8 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
 
-        return $this->json(
-            "Votre compte a bien été enregistré !", 
+        return $this->json(['token' => $JWTManager->create($user),
+            "Votre compte a bien été enregistré !"], 
             Response::HTTP_CREATED
         );
     }
