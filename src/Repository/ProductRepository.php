@@ -36,6 +36,22 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
+     * I want to collect 10 random products 
+     */
+    public function findThreeRandomProducts()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            ORDER BY RAND()'
+        );
+
+        return $query->setMaxResults(3)->getResult();
+    }
+
+    /**
      * I want to collect the lastest products 
      */
     public function latestProducts()

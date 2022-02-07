@@ -20,9 +20,11 @@ class ProductController extends AbstractController
      */
     public function getProducts(ProductRepository $productRepository, Request $request): Response
     {
+        $path = $request->getUriForPath('/uploads/images/');
 
         $randomsProducts = $productRepository->findTenRandomProducts();
         $latestProducts = $productRepository->latestProducts();
+        $favoriteProducts = $productRepository->findThreeRandomProducts();
 
         if ($request->get('type')) {
             $type = $request->get('type');
@@ -38,6 +40,14 @@ class ProductController extends AbstractController
                 case 'favoritePromo':
                     return $this->json(
                         $randomsProducts,
+                        Response::HTTP_OK,
+                        [],
+                        ['groups' => 'get_products']
+                    );
+                    break;
+                case 'favoriteProduct':
+                    return $this->json(
+                        $favoriteProducts,
                         Response::HTTP_OK,
                         [],
                         ['groups' => 'get_products']
@@ -61,6 +71,7 @@ class ProductController extends AbstractController
 
         if ($request->get('search')) {
             $productsList = $productRepository->findBySearch($request->get('search'));
+            // $productsList['pathImage'] = json_encode($path, JSON_UNESCAPED_SLASHES);
 
             return $this->json(
                 $productsList,
