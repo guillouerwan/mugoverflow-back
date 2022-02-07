@@ -17,7 +17,7 @@ class PromoController extends AbstractController
      */
     public function getProducts(PromoRepository $promoRepository): Response
     {
-        $promoList = $promoRepository->findAll();
+        $promoList = $promoRepository->findBy([], ['name' => 'ASC']);
 
         return $this->json(
             $promoList,
