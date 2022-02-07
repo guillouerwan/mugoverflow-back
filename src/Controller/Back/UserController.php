@@ -80,9 +80,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData());
+            if ($form->get('password')->getData()) {
+                $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData());
 
-            $user->setPassword($hashedPassword);
+                $user->setPassword($hashedPassword);
+            }
             $entityManager->flush();
             $this->addFlash('success', 'Modification de l\'utilisateur réussi');
             return $this->redirectToRoute('back_user_index', [], Response::HTTP_SEE_OTHER);
