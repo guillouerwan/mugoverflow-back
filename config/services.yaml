@@ -7,7 +7,9 @@ parameters:
     images_products_directory: '%kernel.project_dir%/public/uploads/images'
     images_profil_directory: '%kernel.project_dir%/public/uploads/images_users'
     images_categories_directory: '%kernel.project_dir%/public/uploads/images_categories'
-    webDir: '%env(DOCUMENT_ROOT)%'
+    images_products_directory_for_uri: '/uploads/images/'
+    images_profil_directory_for_uri: '/uploads/images_users/'
+    images_categories_directory_for_uri: '/uploads/images_categories/'
 services:
     # default configuration for services in *this* file
     _defaults:

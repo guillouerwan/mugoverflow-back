@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,10 +19,15 @@ class CategoryController extends AbstractController
      * 
      * @Route("/api/categories", name="api_categories", methods={"GET"})
      */
-    public function getCategories(CategoryRepository $categoryRepository): Response
+    public function getCategories(CategoryRepository $categoryRepository, Request $request): Response
     {
+        $path = $request->getUriForPath($this->getParameter('images_categories_directory_for_uri'));
         $categoryList = $categoryRepository->findAll();
-      
+        foreach ($categoryList as $category) {
+            if ($category->getImage() !== null) {
+                $category->setImage($path . $category->getImage());
+            }
+        }
         return $this->json(
             // Les données à sérialiser (à convertir en JSON)
             $categoryList,
@@ -45,14 +51,30 @@ class CategoryController extends AbstractController
      * Get all products of one category
      * @Route("/api/categories/{slug}/products", name="api_products_get_category", methods={"GET"})
      */
-    public function getProductsOfCategory(Category $category, ProductRepository $productRepository): Response
+    public function getProductsOfCategory(Category $category, ProductRepository $productRepository, Request $request): Response
     {
+        $path = $request->getUriForPath($this->getParameter('images_categories_directory_for_uri'));
+        $pathProduct = $request->getUriForPath($this->getParameter('images_products_directory_for_uri'));
         // 404 ?
         if ($category=== null) {
             return $this->json(['error' => 'catégorie non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
+        if ($category->getImage() !== null) {
+            $category->setImage($path . $category->getImage());
+        }
+        
+
         $productList = $category->getProducts();
+
+        foreach ($productList as $product) {
+            if ($product->getMockupFront() !== null) {
+                $product->setMockupFront($pathProduct . $product->getMockupFront());
+            }
+            if ($product->getmockupOverview() !== null) {
+                $product->setmockupOverview($pathProduct . $product->getmockupOverview());
+            }
+        }
        
         // Tableau PHP à convertir en JSON
         $data = [

@@ -33,9 +33,14 @@ class UserController extends AbstractController
      * 
      * @Route("/api/profil", name="api_user_profil", methods={"GET"})
      */
-    public function getProfil(): Response
+    public function getProfil(Request $request, UserRepository $userRepository): Response
     {
-        $user = $this->getUser();
+        $path = $request->getUriForPath($this->getParameter('images_products_directory_for_uri'));
+        $user = $userRepository->find($this->getUser());
+
+        if ($user->getImage() !== null) {
+            $user->setImage($path . $user->getImage());
+        }
 
         return $this->json(
             // Data to serialized
