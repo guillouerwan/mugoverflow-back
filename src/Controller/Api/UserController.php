@@ -236,4 +236,31 @@ class UserController extends AbstractController
             ['groups' => 'user']
         );
     }
+
+    /**
+     * Delete account
+     * 
+     * @Route("api/profil/delete", name="api_user_delete_account", methods={"POST"})
+     */
+    public function delete(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    {
+        $userTodelete = $userRepository->find($this->getUser());
+
+        $data = json_decode($request->getContent(), true);
+        
+        $currentPassword = $userPasswordHasherInterface->isPasswordValid($this->getUser(), $data["currentPassword"]);
+
+        if(!$currentPassword){
+            return $this->json('Mot de pass incorrect', Response::HTTP_BAD_REQUEST);
+        }
+
+        $entityManager->remove($userTodelete);
+        $entityManager->flush();
+
+
+        return $this->json(
+            "Votre compte à bien été supprimé", 
+            200
+        );
+    }
 }
