@@ -244,7 +244,7 @@ class UserController extends AbstractController
      */
     public function delete(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
-        $userTodelete = $userRepository->find($this->getUser());
+        $userToDelete = $userRepository->find($this->getUser());
 
         $data = json_decode($request->getContent(), true);
         
@@ -254,9 +254,8 @@ class UserController extends AbstractController
             return $this->json('Mot de pass incorrect', Response::HTTP_BAD_REQUEST);
         }
 
-        $entityManager->remove($userTodelete);
+        $entityManager->remove($userToDelete);
         $entityManager->flush();
-
 
         return $this->json(
             "Votre compte à bien été supprimé", 
