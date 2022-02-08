@@ -14,7 +14,6 @@ class LoginController extends AbstractController
      */
     public function index(AuthenticationUtils $authenticationUtils): Response
       {
-        // Les deux lignes suivantes servent en cas d'échec à la connexion
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user

@@ -6,6 +6,8 @@
 <h1>Edition du produit : {{ product.name }}</h1>
 
 {{ include('back/product/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+
+{# Part for show image and link delete image if it's an existing product #}
 {% if product.id != null %}
 <div class="d-flex flex-column my-2">
     {% if product.mockupFront != null %}
