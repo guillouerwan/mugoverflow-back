@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 class PromoController extends AbstractController
 {
 
-    /**  Get all promo
+    /**
+     * Get all promos
      *
      * @Route("/api/promos", name="api_promo", methods={"GET"})
      */

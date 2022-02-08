@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 class CategoryController extends AbstractController
 
 {
-    // 
     /** Get all Categories 
      * 
      * @Route("/api/categories", name="api_categories", methods={"GET"})
@@ -22,25 +21,23 @@ class CategoryController extends AbstractController
     public function getCategories(CategoryRepository $categoryRepository, Request $request): Response
     {
         $path = $request->getUriForPath($this->getParameter('images_categories_directory_for_uri'));
+        
         $categoryList = $categoryRepository->findAll();
+        
         foreach ($categoryList as $category) {
+            // For send the uri image :
             if ($category->getImage() !== null) {
                 $category->setImage($path . $category->getImage());
             }
         }
+
         return $this->json(
-            // Les données à sérialiser (à convertir en JSON)
             $categoryList,
-            // Le status code
             200,
-            // Les en-têtes de réponse à ajouter (aucune)
             [],
-            // Les groupes à utiliser par le Serializer
             [
             'groups' => [
-                // Le groupe des catégories
                 'get_categories',
-                // Le groupe des products
                 'get_products'
             ]
         ]);
@@ -48,35 +45,40 @@ class CategoryController extends AbstractController
     }    
      
     /**
-     * Get all products of one category
+     * Get all products for a category given
+     * 
      * @Route("/api/categories/{slug}/products", name="api_products_get_category", methods={"GET"})
      */
     public function getProductsOfCategory(Category $category, ProductRepository $productRepository, Request $request): Response
     {
         $path = $request->getUriForPath($this->getParameter('images_categories_directory_for_uri'));
+
         $pathProduct = $request->getUriForPath($this->getParameter('images_products_directory_for_uri'));
-        // 404 ?
+
         if ($category=== null) {
             return $this->json(['error' => 'catégorie non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
+        // For send the uri image :
         if ($category->getImage() !== null) {
             $category->setImage($path . $category->getImage());
         }
         
-
         $productList = $category->getProducts();
 
         foreach ($productList as $product) {
+            
+            // For send the uri image :
             if ($product->getMockupFront() !== null) {
                 $product->setMockupFront($pathProduct . $product->getMockupFront());
             }
+
             if ($product->getmockupOverview() !== null) {
                 $product->setmockupOverview($pathProduct . $product->getmockupOverview());
             }
         }
        
-        // Tableau PHP à convertir en JSON
+        // Data to return
         $data = [
             'category' => $category,
             'products' => $productList,
@@ -88,12 +90,10 @@ class CategoryController extends AbstractController
         [],
         [
             'groups' => [
-                // Le groupe des catégories
                 'get_categories',
-                // Le groupe des products
                 'get_products'
             ]
         ]);
-}
+    }
     
 }

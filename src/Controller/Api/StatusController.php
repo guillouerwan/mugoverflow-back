@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends AbstractController
 {
 
-    /**  Get all status
+    /**
+     * Get all status
      *
      * @Route("/api/status", name="api_status", methods={"GET"})
      */

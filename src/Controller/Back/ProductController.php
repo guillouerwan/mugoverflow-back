@@ -21,24 +21,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProductController extends AbstractController
 {
     /**
+     * List of all products registred 
+     * 
      * @Route("/", name="back_product_index", methods={"GET"})
      */
     public function index(ProductRepository $productRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $donnees = $productRepository->findAll();
 
+        // KnpPaginatorBundle
         $products = $paginator->paginate(
             $donnees, 
             $request->query->getInt('page', 1), 
             5 
         );
         $products->setCustomParameters(['size' => 'small']);
+
         return $this->render('back/product/index.html.twig', [
             'products' => $products,
         ]);
     }
 
     /**
+     * Add a new product
+     * 
      * @Route("/new", name="back_product_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, PicturesManager $picturesManager): Response
@@ -51,6 +57,8 @@ class ProductController extends AbstractController
             $mockupOverviewFile = $form->get('mockupOverview')->getData();
             $assetFrontFile = $form->get('assetFront')->getData();
             $assetBackFile = $form->get('assetBack')->getData();
+
+            // Call PictureManager service for each images uploaded, if return false the user is notified and the adding is cancelled
 
             if ($mockupFrontFile) {
                 if(!$picturesManager->add($product, 'mockupFront', $mockupFrontFile, 'images_products_directory')){
@@ -94,7 +102,9 @@ class ProductController extends AbstractController
 
             $entityManager->persist($product);
             $entityManager->flush();
+
             $this->addFlash('success', 'Produit ajouté');
+
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -105,6 +115,8 @@ class ProductController extends AbstractController
     }
 
     /**
+     * Show an existing product 
+     * 
      * @Route("/{id}", name="back_product_show", methods={"GET"})
      */
     public function show(Product $product): Response
@@ -115,6 +127,8 @@ class ProductController extends AbstractController
     }
 
     /**
+     * Edit an existing product 
+     * 
      * @Route("/{id}/edit", name="back_product_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger, PicturesManager $picturesManager): Response
@@ -123,10 +137,14 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $mockupFrontFile = $form->get('mockupFront')->getData();
             $mockupOverviewFile = $form->get('mockupOverview')->getData();
             $assetFrontFile = $form->get('assetFront')->getData();
             $assetBackFile = $form->get('assetBack')->getData();
+
+            // Call PictureManager service for each new image uploaded, if return false the user is notified and the edit is cancelled
+
             if ($mockupFrontFile) {
                 if(!$picturesManager->add($product, 'mockupFront', $mockupFrontFile, 'images_products_directory')){
                     $this->addFlash('warning', 'Erreur durant le chargement du mockup front');
@@ -156,7 +174,9 @@ class ProductController extends AbstractController
 
             $slugName = $slugger->slug($product->getName())->lower();
             $product->setSlug($slugName);
+
             $this->addFlash('success', 'Produit modifié');
+
             $entityManager->flush();
 
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
@@ -169,11 +189,16 @@ class ProductController extends AbstractController
     }
 
     /**
+     * Delete a product
+     * 
      * @Route("/{id}", name="back_product_delete", methods={"POST"})
      */
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager, PicturesManager $picturesManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+
+            // Call PictureManager service for each image to delete.
+
             if($product->getMockupFront() !== null){
                 $picturesManager->delete($product, 'MockupFront', 'images_products_directory');
             }
@@ -186,8 +211,11 @@ class ProductController extends AbstractController
             if($product->getAssetBack() !== null){
                 $picturesManager->delete($product, 'AssetBack', 'images_products_directory');
             }
+
             $entityManager->remove($product);
+
             $this->addFlash('success', 'Produit supprimé');
+
             $entityManager->flush();
         }
 
@@ -195,17 +223,24 @@ class ProductController extends AbstractController
     }
 
     /**
+     * To delete an image on a given product
+     * 
      * @Route("/{id}/{image}", name="back_product_picture", methods={"POST"})
      */
     public function deletePicture($image, Product $product, EntityManagerInterface $entityManager, PicturesManager $picturesManager)
     {
+        // Call PictureManager service if return false the user is notified.
         if(!$picturesManager->delete($product, $image, 'images_products_directory')){
+
             $this->addFlash('danger', 'Erreur durant la suppression de l\'image');
+            
             return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
         };
 
         $entityManager->flush();
+
         $this->addFlash('success', 'Image supprimée');
+
         return $this->redirectToRoute('back_product_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -14,7 +14,8 @@ class ProductController extends AbstractController
 
 {
  
-    /**  Get all products
+    /**
+     * Get all products
      *
      * @Route("/api/products", name="api_products", methods={"GET"})
      */
@@ -28,12 +29,15 @@ class ProductController extends AbstractController
 
         $favoriteProducts = $productRepository->findThreeRandomProducts();
 
-
         if ($request->get('type')) {
+
             $type = $request->get('type');
+
+            // If a param is given
             switch ($type) {
                 case 'random':
                     foreach ($randomsProducts as $product) {
+                        // For send the uri image :
                         if ($product->getMockupFront() !== null) {
                             $product->setMockupFront($path . $product->getMockupFront());
                         }
@@ -50,6 +54,7 @@ class ProductController extends AbstractController
                     break;
                 case 'favoritePromo':
                     foreach ($randomsProducts as $product) {
+                        // For send the uri image :
                         if ($product->getMockupFront() !== null) {
                             $product->setMockupFront($path . $product->getMockupFront());
                         }
@@ -66,6 +71,7 @@ class ProductController extends AbstractController
                     break;
                 case 'favoriteProduct':
                     foreach ($favoriteProducts as $product) {
+                        // For send the uri image :
                         if ($product->getMockupFront() !== null) {
                             $product->setMockupFront($path . $product->getMockupFront());
                         }
@@ -82,6 +88,7 @@ class ProductController extends AbstractController
                     break;
                 case 'latest':
                     foreach ($latestProducts as $product) {
+                        // For send the uri image :
                         if ($product->getMockupFront() !== null) {
                             $product->setMockupFront($path . $product->getMockupFront());
                         }
@@ -105,13 +112,16 @@ class ProductController extends AbstractController
         }
 
         if ($request->get('search')) {
+
             $productsList = $productRepository->findBySearch($request->get('search'));
 
-        
             foreach ($productsList as $product) {
+
+                // For send the uri image :
                 if ($product->getMockupFront() !== null) {
                     $product->setMockupFront($path . $product->getMockupFront());
                 }
+
                 if ($product->getmockupOverview() !== null) {
                     $product->setmockupOverview($path . $product->getmockupOverview());
                 }
@@ -128,9 +138,12 @@ class ProductController extends AbstractController
         $productsList = $productRepository->findAll();
 
         foreach ($productsList as $product) {
+
+            // For send the uri image :
             if ($product->getMockupFront() !== null) {
                 $product->setMockupFront($path . $product->getMockupFront());
             }
+
             if ($product->getmockupOverview() !== null) {
                 $product->setmockupOverview($path . $product->getmockupOverview());
             }
@@ -145,18 +158,19 @@ class ProductController extends AbstractController
        
     }        
 
-
     /**
-     * Get one products with id
+     * Get one product with its slug
      * 
      * @Route("/api/products/{slug}", name="api_product", methods={"GET"})
      */
     public function getProduct(Product $product = null, Request $request)
     {
         $path = $request->getUriForPath($this->getParameter('images_products_directory_for_uri'));
+
         if ($product === null) {
             return $this->json(['error' => 'Produit non trouvé.'], Response::HTTP_NOT_FOUND);
         }
+
         // For send the uri image :
         if($product->getMockupFront() !== null){
             $product->setMockupFront($path . $product->getMockupFront());
@@ -170,6 +184,7 @@ class ProductController extends AbstractController
         if($product->getAssetFront() !== null){
             $product->setAssetFront($path . $product->getAssetFront());
         }
+
         return $this->json($product, Response::HTTP_OK, [], ['groups' => 'get_product']);
     }
 

@@ -31,7 +31,6 @@ class LoginController extends AbstractController
      */
     public function logout(): void
     {
-        // // controller can be blank: it will never be called!
-        // return $this->redirectToRoute('login', [], Response::HTTP_SEE_OTHER);
+        // controller can be blank: it will never be called!
     }
 }

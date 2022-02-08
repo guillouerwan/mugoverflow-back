@@ -18,12 +18,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class SecondaryColorController extends AbstractController
 {
     /**
+     * List of all secondary colors registred 
+     * 
      * @Route("/", name="back_secondary_color_index", methods={"GET"})
      */
     public function index(SecondaryColorRepository $secondaryColorRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $donnees = $secondaryColorRepository->findAll();
 
+        // KnpPaginatorBundle
         $secondaryColors = $paginator->paginate(
             $donnees, 
             $request->query->getInt('page', 1), 
@@ -36,17 +39,23 @@ class SecondaryColorController extends AbstractController
     }
 
     /**
+     * Add a new secondary color
+     * 
      * @Route("/new", name="back_secondary_color_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $secondaryColor = new SecondaryColor();
+
         $form = $this->createForm(SecondaryColorType::class, $secondaryColor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->persist($secondaryColor);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Nouvelle couleur ajouté');
 
             return $this->redirectToRoute('back_secondary_color_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -58,16 +67,8 @@ class SecondaryColorController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="back_secondary_color_show", methods={"GET"})
-     */
-    public function show(SecondaryColor $secondaryColor): Response
-    {
-        return $this->render('back/secondary_color/show.html.twig', [
-            'secondary_color' => $secondaryColor,
-        ]);
-    }
-
-    /**
+     * Edit an existing secondary color 
+     * 
      * @Route("/{id}/edit", name="back_secondary_color_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, SecondaryColor $secondaryColor, EntityManagerInterface $entityManager): Response
@@ -76,7 +77,10 @@ class SecondaryColorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->flush();
+
+            $this->addFlash('success', 'Couleur éditée');
 
             return $this->redirectToRoute('back_secondary_color_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -88,14 +92,19 @@ class SecondaryColorController extends AbstractController
     }
 
     /**
+     * Delete a secondary color
+     * 
      * @Route("/{id}", name="back_secondary_color_delete", methods={"POST"})
      */
     public function delete(Request $request, SecondaryColor $secondaryColor, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$secondaryColor->getId(), $request->request->get('_token'))) {
+
             $entityManager->remove($secondaryColor);
             $entityManager->flush();
         }
+
+        $this->addFlash('danger', 'Couleur supprimée !');
 
         return $this->redirectToRoute('back_secondary_color_index', [], Response::HTTP_SEE_OTHER);
     }

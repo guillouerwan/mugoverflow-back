@@ -26,9 +26,9 @@ class PicturesManager
     /**
      * Check and delete an image file from BDD and the physical folder for an entity given and this property
      *
-     * @param object $entity
-     * @param string $propertyNamePicture
-     * @param string $directory
+     * @param object $entity The entity to work
+     * @param string $propertyNamePicture Name property of the entity containing the image
+     * @param string $directory The name of directory contained in the parameter in service.yaml or put directly your directory
      * @return void
      */
     public function delete($entity, $propertyNamePicture, $directory){
@@ -51,10 +51,10 @@ class PicturesManager
     /**
      * Add an image for an entity given and this property
      *
-     * @param object $entity
-     * @param string $propertyNamePicture
-     * @param object $imageFile
-     * @param string $directory
+     * @param object $entity The entity to work
+     * @param string $propertyNamePicture Name property of the entity containing the image
+     * @param object $imageFile the image retrieved via the form
+     * @param string $directory The name of directory contained in the parameter in service.yaml or put directly your directory
      * @return void
      */
     public function add($entity, $propertyNamePicture, $imageFile, $directory){

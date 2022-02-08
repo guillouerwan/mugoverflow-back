@@ -55,7 +55,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * update our own profil
+     * Update our own profil
      * 
      * @Route("/api/profil/update", name="api_user_profil_update", methods={"PUT"})
      */
@@ -115,12 +115,14 @@ class UserController extends AbstractController
 
         // We make the modifications in the folder and BDD
         if ($uploadedFile) {
+
             if(!$picturesManager->add($user, 'Image', $uploadedFile, 'images_profil_directory')){
                 return $this->json(
                     ['error' => 'Erreur durant le chargement de l\'image'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -132,7 +134,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * register a new user
+     * Register a new user
      * 
      * @Route("/api/register", name="api_user_register", methods={"POST"})
      */
