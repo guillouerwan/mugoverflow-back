@@ -27,7 +27,7 @@ class ProductController extends AbstractController
      */
     public function index(ProductRepository $productRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $donnees = $productRepository->findAll();
+        $donnees = $productRepository->findBy([], ['id' => 'DESC']);
 
         // KnpPaginatorBundle
         $products = $paginator->paginate(
